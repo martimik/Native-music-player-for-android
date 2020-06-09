@@ -33,7 +33,7 @@ class MusicService : Service(),
 
     private var playList = mutableListOf<AudioModel>()
     private var songPos: Int = 0
-    private var isPlaying = false
+    private var isPaused = false
 
     override fun onCreate() {
         super.onCreate()
@@ -60,6 +60,21 @@ class MusicService : Service(),
         player.setOnPreparedListener(this)
         player.setOnCompletionListener(this)
         player.setOnErrorListener(this)
+
+        if(playList.size != 0) {
+            val song = playList[songPos]
+            val trackUri = ContentUris.withAppendedId(
+                android.provider.MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
+                song.getAudioId()
+            )
+
+            // Set media player data source
+            try {
+                player.setDataSource(applicationContext, trackUri)
+            } catch (e: Exception) {
+                Log.e("Player", "Data source error.", e)
+            }
+        }
     }
 
     inner class MusicBinder : Binder() {
@@ -92,17 +107,14 @@ class MusicService : Service(),
 
     override fun onPrepared(mp: MediaPlayer) {
         mp.start()
-        isPlaying = true
     }
 
-
     override fun onError(mp: MediaPlayer?, what: Int, extra: Int): Boolean {
-        // TODO
         return false
     }
 
     override fun onCompletion(mp: MediaPlayer?) {
-        TODO("Not yet implemented")
+        Log.i("Player", "onCompletion")
     }
 
     fun setPlaylist(newPlaylist: MutableList<AudioModel>) {
@@ -129,7 +141,7 @@ class MusicService : Service(),
     }
 
     fun getStatus() : Boolean {
-        return isPlaying
+        return player.isPlaying
     }
 
     fun playlistExists() : Boolean {
@@ -187,14 +199,16 @@ class MusicService : Service(),
     fun pausePlay() {
         if(player.isPlaying) {
             player.pause()
-            isPlaying = false
+            isPaused = true
         }
     }
 
     fun resumePlay() {
-        if(!player.isPlaying) {
+        if(isPaused) {
             player.start()
-            isPlaying = true
+            isPaused = false
+        } else {
+            player.prepareAsync()
         }
     }
 }

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.recyclerview.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/list_recyclerview"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="8dp"
+    android:scrollbarSize="2dp"
+    android:scrollbarStyle="insideOverlay"
+    android:scrollbarThumbVertical="@color/white"
+    android:scrollbars="vertical"
+    android:verticalScrollbarPosition="right">
+
+</androidx.recyclerview.widget.RecyclerView>

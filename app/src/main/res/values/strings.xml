@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Music Library</string>
+    <string name="tab_text_1">PlayLists</string>
+    <string name="tab_text_2">Albums</string>
+    <string name="tab_text_3">Artists</string>
+    <string name="duration">%1$s  -  %2$s:%3$s</string>
+    <string name="albums">Albums</string>
+</resources>

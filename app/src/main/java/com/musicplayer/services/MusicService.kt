@@ -33,7 +33,13 @@ class MusicService : Service(),
 
     private var playList = mutableListOf<AudioModel>()
     private var songPos: Int = 0
-    private var isPaused = false
+    private var init : Boolean = true
+
+    inner class MusicBinder : Binder() {
+        fun getService() : MusicService {
+            return this@MusicService
+        }
+    }
 
     override fun onCreate() {
         super.onCreate()
@@ -51,15 +57,24 @@ class MusicService : Service(),
         songPos = sharedPreferences.getInt("songPos", 0)
 
         initMusicPlayer()
+        setSource()
+
     }
 
     private fun initMusicPlayer(){
+
         player.setWakeMode(applicationContext, PowerManager.PARTIAL_WAKE_LOCK)
         player.setAudioAttributes(AudioAttributes.Builder().setContentType(AudioAttributes.CONTENT_TYPE_MUSIC).build())
 
         player.setOnPreparedListener(this)
         player.setOnCompletionListener(this)
         player.setOnErrorListener(this)
+
+    }
+
+    fun setSource(){
+
+        player.reset()
 
         if(playList.size != 0) {
             val song = playList[songPos]
@@ -71,21 +86,21 @@ class MusicService : Service(),
             // Set media player data source
             try {
                 player.setDataSource(applicationContext, trackUri)
+                player.prepareAsync()
+
+                editor = sharedPreferences.edit()
+                editor.putInt("songPos", songPos)
+                editor.apply()
+
             } catch (e: Exception) {
                 Log.e("Player", "Data source error.", e)
             }
         }
     }
 
-    inner class MusicBinder : Binder() {
-        fun getService() : MusicService {
-            return this@MusicService
-        }
-    }
-
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         Log.i("Player: ","Start")
-        return Service.START_NOT_STICKY
+        return START_NOT_STICKY
 
     }
 
@@ -95,26 +110,35 @@ class MusicService : Service(),
 
     override fun onUnbind(intent: Intent?): Boolean {
         player.stop()
-        player.release()
         return false
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        player.stop()
+        player.release()
         Log.i("Player: ","Stop")
     }
 
     override fun onPrepared(mp: MediaPlayer) {
-        mp.start()
+        if(!init) mp.start()
+        else init = false
     }
 
     override fun onError(mp: MediaPlayer?, what: Int, extra: Int): Boolean {
+        mp!!.reset()
         return false
     }
 
     override fun onCompletion(mp: MediaPlayer?) {
-        Log.i("Player", "onCompletion")
+
+        if(songPos < (playList.size  - 1)){
+            songPos += 1
+            setSource()
+        }
+        else {
+            songPos = 0
+            setSource()
+        }
     }
 
     fun setPlaylist(newPlaylist: MutableList<AudioModel>) {
@@ -128,8 +152,8 @@ class MusicService : Service(),
         editor.apply()
     }
 
-    fun getPlaylist() : MutableList<AudioModel> {
-        return playList
+    fun playlistExists() : Boolean {
+        return playList.isNotEmpty()
     }
 
     fun setSong(newSong : Int) {
@@ -144,34 +168,16 @@ class MusicService : Service(),
         return player.isPlaying
     }
 
-    fun playlistExists() : Boolean {
-        return playList.isNotEmpty()
+    fun getPosition() : Long {
+        return player.currentPosition.toLong()
     }
 
-    fun playSong() {
+    fun startPlayer() {
+        player.prepareAsync()
+    }
 
-        player.reset()
-
-        if(playList.size != 0) {
-            val song = playList[songPos]
-            val trackUri = ContentUris.withAppendedId(
-                android.provider.MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
-                song.getAudioId()
-            )
-
-            // Set media player data source
-            try {
-                player.setDataSource(applicationContext, trackUri)
-            } catch (e: Exception) {
-                Log.e("Player", "Data source error.", e)
-            }
-
-            player.prepareAsync()
-
-            editor = sharedPreferences.edit()
-            editor.putInt("songPos", songPos)
-            editor.apply()
-        }
+    fun seek(tPos : Int) {
+        player.seekTo(tPos * 1000)
     }
 
     fun nextSong(){
@@ -182,33 +188,34 @@ class MusicService : Service(),
             songPos = 0
         }
 
-        playSong()
+        setSource()
     }
 
     fun prevSong(){
-        if(songPos > 0) {
-            songPos -= 1
-        }
-        else {
-            songPos = (playList.size - 1)
+        when {
+            player.currentPosition > 10000 -> {
+                player.seekTo(0)
+            }
+            songPos > 0 -> {
+                songPos -= 1
+            }
+            else -> {
+                songPos = (playList.size - 1)
+            }
         }
 
-        playSong()
+        setSource()
     }
 
     fun pausePlay() {
         if(player.isPlaying) {
             player.pause()
-            isPaused = true
         }
     }
 
     fun resumePlay() {
-        if(isPaused) {
+        if(!player.isPlaying) {
             player.start()
-            isPaused = false
-        } else {
-            player.prepareAsync()
         }
     }
 }

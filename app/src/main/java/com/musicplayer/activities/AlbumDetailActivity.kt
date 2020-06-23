@@ -132,7 +132,7 @@ class AlbumDetailActivity : AppCompatActivity() {
 
     fun setSong(songPos : Int){
         musicSrv?.setSong(songPos)
-        musicSrv?.playSong()
+        musicSrv?.setSource()
     }
 
     fun setPlaylist(newPlaylist: MutableList<AudioModel>) {

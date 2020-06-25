@@ -29,11 +29,15 @@ class AlbumDetailActivity : AppCompatActivity() {
     private var playIntent: Intent? = null
     private var musicBound = false
 
+    private lateinit var broadCastReceiver : BroadcastReceiver
+
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
         supportActionBar!!.hide()
         setContentView(R.layout.activity_album_detail)
+
+        registerReceiver()
 
         val albumString = intent.extras?.getInt("albumPosition")
         val mData = DataManager.returnInstance().getAlbum(albumString!!)
@@ -41,10 +45,7 @@ class AlbumDetailActivity : AppCompatActivity() {
         val view = findViewById<CoordinatorLayout>(R.id.albumDetailContainer)
 
         view.findViewById<CollapsingToolbarLayout>(R.id.collapsing_toolbar).title = mData.getAlbumName()
-        view.findViewById<ImageView>(R.id.app_bar_image).setImageDrawable(
-            ContextCompat.getDrawable(this,
-                R.drawable.ic_music_icon
-            ))
+        view.findViewById<ImageView>(R.id.app_bar_image).setImageDrawable( ContextCompat.getDrawable(this, R.drawable.ic_music_icon ))
         view.findViewById<TextView>(R.id.activity_album_detail_tv_artist).text = mData.getArtist()
         view.findViewById<TextView>(R.id.activity_album_detail_tv_year).text = String.format("%01d Tracks", mData.getSongs().size)
 
@@ -76,12 +77,8 @@ class AlbumDetailActivity : AppCompatActivity() {
             }
         }
 
-        view.findViewById<CollapsingToolbarLayout>(R.id.collapsing_toolbar).setCollapsedTitleTextColor(ColorStateList.valueOf(ContextCompat.getColor(this,
-            R.color.white
-        )))
-        view.findViewById<CollapsingToolbarLayout>(R.id.collapsing_toolbar).setExpandedTitleTextColor(ColorStateList.valueOf(ContextCompat.getColor(this,
-            R.color.white
-        )))
+        view.findViewById<CollapsingToolbarLayout>(R.id.collapsing_toolbar).setCollapsedTitleTextColor(ColorStateList.valueOf(ContextCompat.getColor(this, R.color.white )))
+        view.findViewById<CollapsingToolbarLayout>(R.id.collapsing_toolbar).setExpandedTitleTextColor(ColorStateList.valueOf(ContextCompat.getColor(this, R.color.white )))
 
         val recyclerView = findViewById<RecyclerView>(R.id.recyclerView)
         recyclerView.setHasFixedSize(true)
@@ -132,7 +129,7 @@ class AlbumDetailActivity : AppCompatActivity() {
 
     fun setSong(songPos : Int){
         musicSrv?.setSong(songPos)
-        musicSrv?.setSource()
+        musicSrv?.setSource(true)
     }
 
     fun setPlaylist(newPlaylist: MutableList<AudioModel>) {
@@ -177,5 +174,16 @@ class AlbumDetailActivity : AppCompatActivity() {
         } else {
             smallPlayer.visibility = View.GONE
         }
+    }
+
+    private fun registerReceiver() {
+        broadCastReceiver = object : BroadcastReceiver() {
+            override fun onReceive(context: Context?, intent: Intent) {
+                val otpCode = intent.getStringExtra("UI_UPDATE")
+
+                updateSmallPlayer()
+            }
+        }
+        registerReceiver(broadCastReceiver, IntentFilter("UI_UPDATE"))
     }
 }

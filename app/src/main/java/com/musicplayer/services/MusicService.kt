@@ -33,7 +33,8 @@ class MusicService : Service(),
 
     private var playList = mutableListOf<AudioModel>()
     private var songPos: Int = 0
-    private var init : Boolean = true
+    private var timePos : Int = 0
+    private var startPlayback : Boolean = false
 
     inner class MusicBinder : Binder() {
         fun getService() : MusicService {
@@ -55,9 +56,9 @@ class MusicService : Service(),
         }
 
         songPos = sharedPreferences.getInt("songPos", 0)
+        timePos = sharedPreferences.getInt("timePos", 0)
 
         initMusicPlayer()
-        setSource()
 
     }
 
@@ -70,11 +71,26 @@ class MusicService : Service(),
         player.setOnCompletionListener(this)
         player.setOnErrorListener(this)
 
+        if(playList.size != 0) {
+            val song = playList[songPos]
+            val trackUri = ContentUris.withAppendedId(android.provider.MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, song.getAudioId())
+
+            // Set media player data source
+            try {
+                player.setDataSource(applicationContext, trackUri)
+                player.prepare()
+                player.seekTo(timePos)
+
+            } catch (e: Exception) {
+                Log.e("Player", "Data source error.", e)
+            }
+        }
     }
 
-    fun setSource(){
+    fun setSource(start : Boolean){
 
         player.reset()
+        startPlayback = start
 
         if(playList.size != 0) {
             val song = playList[songPos]
@@ -83,7 +99,6 @@ class MusicService : Service(),
                 song.getAudioId()
             )
 
-            // Set media player data source
             try {
                 player.setDataSource(applicationContext, trackUri)
                 player.prepareAsync()
@@ -98,6 +113,13 @@ class MusicService : Service(),
         }
     }
 
+    override fun onPrepared(mp: MediaPlayer) {
+        if(startPlayback) mp.start()
+
+        val intent = Intent("UI_UPDATE")
+        this.sendBroadcast(intent)
+    }
+
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         Log.i("Player: ","Start")
         return START_NOT_STICKY
@@ -109,19 +131,18 @@ class MusicService : Service(),
     }
 
     override fun onUnbind(intent: Intent?): Boolean {
-        player.stop()
         return false
     }
 
     override fun onDestroy() {
         super.onDestroy()
+
+        editor = sharedPreferences.edit()
+        editor.putInt("timePos", player.currentPosition)
+        editor.apply()
+
         player.release()
         Log.i("Player: ","Stop")
-    }
-
-    override fun onPrepared(mp: MediaPlayer) {
-        if(!init) mp.start()
-        else init = false
     }
 
     override fun onError(mp: MediaPlayer?, what: Int, extra: Int): Boolean {
@@ -133,11 +154,11 @@ class MusicService : Service(),
 
         if(songPos < (playList.size  - 1)){
             songPos += 1
-            setSource()
+            setSource(true)
         }
         else {
             songPos = 0
-            setSource()
+            setSource(false)
         }
     }
 
@@ -188,7 +209,7 @@ class MusicService : Service(),
             songPos = 0
         }
 
-        setSource()
+        setSource(player.isPlaying)
     }
 
     fun prevSong(){
@@ -204,7 +225,7 @@ class MusicService : Service(),
             }
         }
 
-        setSource()
+        setSource(player.isPlaying)
     }
 
     fun pausePlay() {

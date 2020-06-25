@@ -27,11 +27,15 @@ class ArtistDetailActivity : AppCompatActivity() {
     private var playIntent: Intent? = null
     private var musicBound = false
 
+    private lateinit var broadCastReceiver : BroadcastReceiver
+
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
         supportActionBar!!.hide()
         setContentView(R.layout.activity_artist_detail)
+
+        registerReceiver()
 
         val albumString = intent.extras?.getString("artist")
         val mData = DataManager.returnInstance().getArtist(albumString!!)
@@ -164,5 +168,16 @@ class ArtistDetailActivity : AppCompatActivity() {
         } else {
             smallPlayer.visibility = View.GONE
         }
+    }
+
+    private fun registerReceiver() {
+        broadCastReceiver = object : BroadcastReceiver() {
+            override fun onReceive(context: Context?, intent: Intent) {
+                val otpCode = intent.getStringExtra("UI_UPDATE")
+
+                updateSmallPlayer()
+            }
+        }
+        registerReceiver(broadCastReceiver, IntentFilter("UI_UPDATE"))
     }
 }

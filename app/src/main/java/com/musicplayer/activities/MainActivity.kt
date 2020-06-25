@@ -4,7 +4,8 @@ import android.Manifest
 import android.content.*
 import android.content.pm.PackageManager
 import android.net.Uri
-import android.os.*
+import android.os.Bundle
+import android.os.IBinder
 import android.view.View
 import android.widget.Button
 import android.widget.ImageView
@@ -16,13 +17,13 @@ import androidx.core.content.ContextCompat
 import androidx.viewpager.widget.ViewPager
 import com.google.android.material.tabs.TabLayout
 import com.musicplayer.R
+import com.musicplayer.adapters.SectionsPagerAdapter
 import com.musicplayer.data.AudioModel
 import com.musicplayer.data.DataManager
 import com.musicplayer.fragments.AlbumListFragment
 import com.musicplayer.fragments.ArtistListFragment
 import com.musicplayer.fragments.SongListFragment
 import com.musicplayer.services.MusicService
-import com.musicplayer.adapters.SectionsPagerAdapter
 
 
 class MainActivity : AppCompatActivity() {
@@ -32,6 +33,8 @@ class MainActivity : AppCompatActivity() {
     private var musicSrv: MusicService? = null
     private var playIntent: Intent? = null
     private var musicBound = false
+
+    private lateinit var broadCastReceiver : BroadcastReceiver
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -53,6 +56,7 @@ class MainActivity : AppCompatActivity() {
         )
 
         dataManager.prepare(this)
+        registerReceiver()
 
         // sectionsPagerAdapter.addFragment(PlaylistFragment(), "Playlists") // TODO
         sectionsPagerAdapter.addFragment(AlbumListFragment(this), "Albums")
@@ -118,19 +122,22 @@ class MainActivity : AppCompatActivity() {
         if(musicBound) {
             this.unbindService(musicConnection)
             musicBound = false
+
+            stopService(Intent(this, MusicService::class.java))
+            unregisterReceiver(broadCastReceiver)
         }
     }
 
     fun setSong(songPos : Int){
         musicSrv?.setSong(songPos)
-        musicSrv?.setSource()
+        musicSrv?.setSource(true)
     }
 
     fun setPlaylist(newPlaylist: MutableList<AudioModel>) {
         musicSrv?.setPlaylist(newPlaylist)
     }
 
-    private fun updateSmallPlayer(){
+    fun updateSmallPlayer(){
 
         val smallPlayer = findViewById<LinearLayout>(R.id.small_player)
 
@@ -170,4 +177,14 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private fun registerReceiver() {
+        broadCastReceiver = object : BroadcastReceiver() {
+            override fun onReceive(context: Context?, intent: Intent) {
+                val otpCode = intent.getStringExtra("UI_UPDATE")
+
+                updateSmallPlayer()
+            }
+        }
+        registerReceiver(broadCastReceiver, IntentFilter("UI_UPDATE"))
+    }
 }

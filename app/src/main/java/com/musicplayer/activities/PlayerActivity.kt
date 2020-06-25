@@ -6,18 +6,13 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.IBinder
 import android.os.Looper
-import android.util.Log
-import android.widget.Button
-import android.widget.ImageView
-import android.widget.SeekBar
+import android.widget.*
 import android.widget.SeekBar.OnSeekBarChangeListener
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import com.musicplayer.R
 import com.musicplayer.services.MusicService
-import java.time.LocalTime
 import java.util.concurrent.TimeUnit
 
 
@@ -27,6 +22,8 @@ class PlayerActivity : AppCompatActivity() {
     private var musicBound = false
     private var handler = Handler(Looper.getMainLooper())
 
+    private lateinit var broadCastReceiver : BroadcastReceiver
+
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
@@ -34,6 +31,7 @@ class PlayerActivity : AppCompatActivity() {
         setContentView(R.layout.activity_player)
 
         bindService()
+        registerReceiver()
 
         val view = findViewById<ConstraintLayout>(R.id.activity_player_cl_container)
 
@@ -49,12 +47,10 @@ class PlayerActivity : AppCompatActivity() {
 
         view.findViewById<Button>(R.id.activity_player_btn_next).setOnClickListener() {
             musicSrv?.nextSong()
-            updateUI()
         }
 
         view.findViewById<Button>(R.id.activity_player_btn_previous).setOnClickListener() {
             musicSrv?.prevSong()
-            updateUI()
         }
 
         view.findViewById<SeekBar>(R.id.activity_player_sb_progressbar).setOnSeekBarChangeListener(object : OnSeekBarChangeListener {
@@ -66,7 +62,7 @@ class PlayerActivity : AppCompatActivity() {
             }
 
             override fun onStartTrackingTouch(seekBar: SeekBar) {
-                handler.removeCallbacks(updateTimeTask)
+                handler.removeCallbacks(updateSeekBar)
             }
 
             override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
@@ -92,11 +88,6 @@ class PlayerActivity : AppCompatActivity() {
         }
     }
 
-    override fun onResume() {
-        super.onResume()
-        updateUI()
-    }
-
     // Service connection
     private val musicConnection: ServiceConnection = object : ServiceConnection {
         override fun onServiceConnected(name: ComponentName, service: IBinder) {
@@ -107,6 +98,7 @@ class PlayerActivity : AppCompatActivity() {
             musicBound = true
 
             updateUI()
+            updateProgressBar()
 
         }
 
@@ -125,6 +117,11 @@ class PlayerActivity : AppCompatActivity() {
         musicBound = true
     }
 
+    override fun onPause() {
+        super.onPause()
+        handler.removeCallbacks(updateSeekBar)
+    }
+
     // Unbind service on destroy
     override fun onDestroy() {
         super.onDestroy()
@@ -132,6 +129,7 @@ class PlayerActivity : AppCompatActivity() {
             this.unbindService(musicConnection)
             musicBound = false
         }
+        handler.removeCallbacks(updateSeekBar)
     }
 
     // Update player UI
@@ -139,25 +137,22 @@ class PlayerActivity : AppCompatActivity() {
 
         if (musicSrv != null) {
 
-            val currentSong = musicSrv?.getSong()
+            val currentSong = musicSrv!!.getSong()
 
             val view = findViewById<ConstraintLayout>(R.id.activity_player_cl_container)
 
             if(musicSrv!!.getStatus()){
-                view.findViewById<Button>(R.id.activity_player_btn_play).setBackgroundResource(R.drawable.ic_pause_circle_filled)
+                findViewById<Button>(R.id.activity_player_btn_play).setBackgroundResource(R.drawable.ic_pause_circle_filled)
             } else {
-                view.findViewById<Button>(R.id.activity_player_btn_play).setBackgroundResource(R.drawable.ic_play_circle_filled)
+                findViewById<Button>(R.id.activity_player_btn_play).setBackgroundResource(R.drawable.ic_play_circle_filled)
             }
 
-            view.findViewById<TextView>(R.id.activity_player_tv_title).text = currentSong?.getTitle()
-            view.findViewById<TextView>(R.id.activity_player_tv_artist).text = currentSong?.getArtist()
+            view.findViewById<TextView>(R.id.activity_player_tv_title).text = currentSong.getTitle()
+            view.findViewById<TextView>(R.id.activity_player_tv_artist).text = currentSong.getArtist()
 
-            updateProgressBar()
-
-            val duration = currentSong!!.getDuration()
+            val duration = currentSong.getDuration()
 
             view.findViewById<SeekBar>(R.id.activity_player_sb_progressbar).max = (duration / 1000).toInt()
-
             view.findViewById<TextView>(R.id.activity_player_tv_duration).text = String.format("%02d:%02d", TimeUnit.MILLISECONDS.toMinutes(duration), TimeUnit.MILLISECONDS.toSeconds(duration) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(duration)))
 
             val albumArt = view.findViewById<ImageView>(R.id.activity_player_iv_cover)
@@ -181,25 +176,34 @@ class PlayerActivity : AppCompatActivity() {
     }
 
     fun updateProgressBar() {
-        handler.postDelayed(updateTimeTask, 100)
+        handler.postDelayed(updateSeekBar, 100)
     }
 
-    private val updateTimeTask: Runnable = object : Runnable {
+    private val updateSeekBar: Runnable = object : Runnable {
         override fun run() {
-            //val totalDuration: Long = musicSrv!!.getSong().getDuration()
+
             val currentDuration: Long = musicSrv!!.getPosition()
 
             val view = findViewById<ConstraintLayout>(R.id.activity_player_cl_container)
 
-            //view.findViewById<TextView>(R.id.activity_player_tv_duration).text = String.format("%02d:%02d", TimeUnit.MILLISECONDS.toMinutes(totalDuration), TimeUnit.MILLISECONDS.toSeconds(totalDuration) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(totalDuration)))
             view.findViewById<TextView>(R.id.activity_player_tv_progress).text = String.format("%02d:%02d", TimeUnit.MILLISECONDS.toMinutes(currentDuration), TimeUnit.MILLISECONDS.toSeconds(currentDuration) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(currentDuration)))
 
-            // Updating progress bar
             view.findViewById<SeekBar>(R.id.activity_player_sb_progressbar).progress = (currentDuration / 1000).toInt()
 
-            // Running this thread after 100 milliseconds
+            // Run this thread again after 1 second
             handler.postDelayed(this, 100)
 
         }
+    }
+
+    private fun registerReceiver() {
+        broadCastReceiver = object : BroadcastReceiver() {
+            override fun onReceive(context: Context?, intent: Intent) {
+                val otpCode = intent.getStringExtra("UI_UPDATE")
+
+                updateUI()
+            }
+        }
+        registerReceiver(broadCastReceiver, IntentFilter("UI_UPDATE"))
     }
 }

@@ -11,6 +11,7 @@ import android.widget.SeekBar.OnSeekBarChangeListener
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
+import androidx.core.graphics.drawable.DrawableCompat
 import com.musicplayer.R
 import com.musicplayer.services.MusicService
 import java.util.concurrent.TimeUnit
@@ -36,21 +37,21 @@ class PlayerActivity : AppCompatActivity() {
         val view = findViewById<ConstraintLayout>(R.id.activity_player_cl_container)
 
         view.findViewById<Button>(R.id.activity_player_btn_play).setOnClickListener {
-            if(musicSrv!!.getStatus()){
-                musicSrv?.pausePlay()
+            if(musicSrv!!.isPlaying()) {
+                musicSrv!!.pausePlay()
                 it.setBackgroundResource(R.drawable.ic_play_circle_filled)
             } else {
-                musicSrv?.resumePlay()
+                musicSrv!!.resumePlay()
                 it.setBackgroundResource(R.drawable.ic_pause_circle_filled)
             }
         }
 
         view.findViewById<Button>(R.id.activity_player_btn_next).setOnClickListener() {
-            musicSrv?.nextSong()
+            musicSrv!!.nextTrack()
         }
 
         view.findViewById<Button>(R.id.activity_player_btn_previous).setOnClickListener() {
-            musicSrv?.prevSong()
+            musicSrv!!.previousTrack()
         }
 
         view.findViewById<SeekBar>(R.id.activity_player_sb_progressbar).setOnSeekBarChangeListener(object : OnSeekBarChangeListener {
@@ -72,17 +73,45 @@ class PlayerActivity : AppCompatActivity() {
                 }
             }
         })
-/*
-        // TODO
-        view.findViewById<Button>(R.id.player_activity_btn_shuffle).setOnClickListener() {
 
+        // TODO
+        view.findViewById<Button>(R.id.activity_player_btn_shuffle).setOnClickListener() {
+
+            val btn = view.findViewById<Button>(R.id.activity_player_btn_shuffle)
+
+            if(musicSrv!!.isShuffled()) {
+                DrawableCompat.setTint(
+                    DrawableCompat.wrap(btn.background),
+                    ContextCompat.getColor(this, R.color.white)
+                )
+            } else {
+                DrawableCompat.setTint(
+                    DrawableCompat.wrap(btn.background),
+                    ContextCompat.getColor(this, R.color.green)
+                )
+            }
+            musicSrv!!.toggleShuffle()
         }
 
         // TODO
-        view.findViewById<Button>(R.id.player_activity_btn_replay).setOnClickListener() {
+        view.findViewById<Button>(R.id.activity_player_btn_loop).setOnClickListener() {
 
+            val btn = view.findViewById<Button>(R.id.activity_player_btn_loop)
+
+            if(musicSrv!!.isLooping()){
+                DrawableCompat.setTint(
+                    DrawableCompat.wrap(btn.background),
+                    ContextCompat.getColor(this, R.color.white)
+                )
+            } else {
+                DrawableCompat.setTint(
+                    DrawableCompat.wrap(btn.background),
+                    ContextCompat.getColor(this, R.color.green)
+                )
+            }
+            musicSrv!!.toggleLoop()
         }
- */
+
         view.findViewById<Button>(R.id.activity_player_btn_return).setOnClickListener() {
             this.finish()
         }
@@ -137,14 +166,20 @@ class PlayerActivity : AppCompatActivity() {
 
         if (musicSrv != null) {
 
-            val currentSong = musicSrv!!.getSong()
+            val currentSong = musicSrv!!.getCurrentTrack()
 
             val view = findViewById<ConstraintLayout>(R.id.activity_player_cl_container)
 
-            if(musicSrv!!.getStatus()){
+            if(musicSrv!!.isPlaying()){
                 findViewById<Button>(R.id.activity_player_btn_play).setBackgroundResource(R.drawable.ic_pause_circle_filled)
             } else {
                 findViewById<Button>(R.id.activity_player_btn_play).setBackgroundResource(R.drawable.ic_play_circle_filled)
+            }
+            if(musicSrv!!.isShuffled()){
+                DrawableCompat.setTint(
+                    DrawableCompat.wrap(findViewById<Button>(R.id.activity_player_btn_shuffle).background),
+                    ContextCompat.getColor(this, R.color.green)
+                )
             }
 
             view.findViewById<TextView>(R.id.activity_player_tv_title).text = currentSong.getTitle()
@@ -199,7 +234,7 @@ class PlayerActivity : AppCompatActivity() {
     private fun registerReceiver() {
         broadCastReceiver = object : BroadcastReceiver() {
             override fun onReceive(context: Context?, intent: Intent) {
-                val otpCode = intent.getStringExtra("UI_UPDATE")
+                // val otpCode = intent.getStringExtra("UI_UPDATE")
 
                 updateUI()
             }

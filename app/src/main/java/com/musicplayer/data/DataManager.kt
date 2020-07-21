@@ -122,8 +122,8 @@ class DataManager {
         return artistList
     }
 
-    fun getArtist(artist :String): List<AlbumModel> {
-        return artistList[artist]!!
+    fun getArtist(artist: String): List<AlbumModel>? {
+        return artistList[artist]
     }
 
     // TODO Implement search function

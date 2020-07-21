@@ -1,6 +1,8 @@
 package com.musicplayer.activities
 
 import android.Manifest
+import android.app.NotificationChannel
+import android.app.NotificationManager
 import android.content.*
 import android.content.pm.PackageManager
 import android.net.Uri
@@ -56,7 +58,9 @@ class MainActivity : AppCompatActivity() {
         )
 
         dataManager.prepare(this)
+
         registerReceiver()
+        createNotificationChannel()
 
         // sectionsPagerAdapter.addFragment(PlaylistFragment(), "Playlists") // TODO
         sectionsPagerAdapter.addFragment(AlbumListFragment(this), "Albums")
@@ -72,7 +76,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         findViewById<Button>(R.id.view_small_player_btn_play).setOnClickListener {
-            if(musicSrv!!.getStatus()){
+            if(musicSrv!!.isPlaying()){
                 musicSrv?.pausePlay()
                 it.setBackgroundResource(R.drawable.ic_play_circle_outline)
             } else {
@@ -100,6 +104,21 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private fun createNotificationChannel() {
+
+        val name = "Media Player Controls"
+        val descriptionText = "Media Player Controls"
+        val importance = NotificationManager.IMPORTANCE_DEFAULT
+        val channel = NotificationChannel("1", name, importance).apply {
+            description = descriptionText
+        }
+        // Register the channel with the system
+        val notificationManager: NotificationManager =
+            getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        notificationManager.createNotificationChannel(channel)
+
+    }
+
     // Bind musicService on start
     override fun onStart() {
         super.onStart()
@@ -120,6 +139,7 @@ class MainActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         if(musicBound) {
+
             this.unbindService(musicConnection)
             musicBound = false
 
@@ -143,7 +163,7 @@ class MainActivity : AppCompatActivity() {
 
         if(musicSrv != null && musicSrv!!.playlistExists()) {
 
-            val curSong = musicSrv?.getSong()
+            val curSong = musicSrv?.getCurrentTrack()
 
             smallPlayer.visibility = View.VISIBLE
             smallPlayer.findViewById<TextView>(R.id.view_small_player_tv_title).text = curSong?.getTitle()
@@ -162,7 +182,7 @@ class MainActivity : AppCompatActivity() {
                 ))
             }
 
-            if(musicSrv!!.getStatus()){
+            if(musicSrv!!.isPlaying()){
                 smallPlayer.findViewById<Button>(R.id.view_small_player_btn_play).setBackgroundResource(
                     R.drawable.ic_pause_circle_outline
                 )
@@ -180,7 +200,7 @@ class MainActivity : AppCompatActivity() {
     private fun registerReceiver() {
         broadCastReceiver = object : BroadcastReceiver() {
             override fun onReceive(context: Context?, intent: Intent) {
-                val otpCode = intent.getStringExtra("UI_UPDATE")
+                // val otpCode = intent.getStringExtra("UI_UPDATE")
 
                 updateSmallPlayer()
             }

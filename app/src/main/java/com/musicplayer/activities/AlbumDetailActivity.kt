@@ -45,7 +45,6 @@ class AlbumDetailActivity : AppCompatActivity() {
         val view = findViewById<CoordinatorLayout>(R.id.albumDetailContainer)
 
         view.findViewById<CollapsingToolbarLayout>(R.id.collapsing_toolbar).title = mData.getAlbumName()
-        view.findViewById<ImageView>(R.id.app_bar_image).setImageDrawable( ContextCompat.getDrawable(this, R.drawable.ic_music_icon ))
         view.findViewById<TextView>(R.id.activity_album_detail_tv_artist).text = mData.getArtist()
         view.findViewById<TextView>(R.id.activity_album_detail_tv_year).text = String.format("%01d Tracks", mData.getSongs().size)
 
@@ -58,7 +57,8 @@ class AlbumDetailActivity : AppCompatActivity() {
 
         if(albumArt.drawable == null) {
             albumArt.setImageDrawable(ContextCompat.getDrawable(this,
-                R.drawable.cover_placeholder
+                //R.drawable.cover_placeholder
+                R.drawable.ic_music_icon
             ))
         }
 
@@ -68,7 +68,7 @@ class AlbumDetailActivity : AppCompatActivity() {
         }
 
         findViewById<Button>(R.id.view_small_player_btn_play).setOnClickListener {
-            if(musicSrv!!.getStatus()){
+            if(musicSrv!!.isPlaying()){
                 musicSrv?.pausePlay()
                 it.setBackgroundResource(R.drawable.ic_play_circle_outline)
             } else {
@@ -136,13 +136,17 @@ class AlbumDetailActivity : AppCompatActivity() {
         musicSrv?.setPlaylist(newPlaylist)
     }
 
+    fun addToPlaylist(songs : MutableList<AudioModel>) {
+        musicSrv!!.addToPlaylist(songs)
+    }
+
     private fun updateSmallPlayer(){
 
         val smallPlayer = findViewById<LinearLayout>(R.id.small_player)
 
         if(musicSrv != null && musicSrv!!.playlistExists()) {
 
-            val curSong = musicSrv?.getSong()
+            val curSong = musicSrv?.getCurrentTrack()
 
             smallPlayer.visibility = View.VISIBLE
             smallPlayer.findViewById<TextView>(R.id.view_small_player_tv_title).text = curSong?.getTitle()
@@ -161,7 +165,7 @@ class AlbumDetailActivity : AppCompatActivity() {
                 ))
             }
 
-            if(musicSrv!!.getStatus()){
+            if(musicSrv!!.isPlaying()){
                 smallPlayer.findViewById<Button>(R.id.view_small_player_btn_play).setBackgroundResource(
                     R.drawable.ic_pause_circle_outline
                 )

@@ -30,7 +30,7 @@ class AlbumListFragment : Fragment {
         this.v = inflater.inflate(R.layout.recycler_view, container, false)
         recyclerView = v.findViewById(R.id.list_recyclerview)
         recyclerView.setHasFixedSize(true)
-        recyclerView.setItemViewCacheSize(20)
+        recyclerView.setItemViewCacheSize(50)
         val albumListAdapter = AlbumListAdapter(mContext)
         recyclerView.layoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
         recyclerView.adapter = albumListAdapter

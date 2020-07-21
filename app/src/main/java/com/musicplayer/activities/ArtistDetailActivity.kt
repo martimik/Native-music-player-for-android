@@ -47,7 +47,7 @@ class ArtistDetailActivity : AppCompatActivity() {
 
         val sArtworkUri: Uri = Uri.parse("content://media/external/audio/albumart")
 
-        for(album in mData){
+        for(album in mData!!){
             val uri: Uri = ContentUris.withAppendedId(sArtworkUri, album.getAlbumKey())
             artistArt.setImageURI(uri)
             if(artistArt.drawable != null) break
@@ -65,7 +65,7 @@ class ArtistDetailActivity : AppCompatActivity() {
         }
 
         findViewById<Button>(R.id.view_small_player_btn_play).setOnClickListener {
-            if(musicSrv!!.getStatus()){
+            if(musicSrv!!.isPlaying()){
                 musicSrv?.pausePlay()
                 it.setBackgroundResource(R.drawable.ic_play_circle_outline)
             } else {
@@ -136,7 +136,7 @@ class ArtistDetailActivity : AppCompatActivity() {
 
         if(musicSrv != null && musicSrv!!.playlistExists()) {
 
-            val curSong = musicSrv?.getSong()
+            val curSong = musicSrv?.getCurrentTrack()
 
             smallPlayer.visibility = View.VISIBLE
             smallPlayer.findViewById<TextView>(R.id.view_small_player_tv_title).text = curSong?.getTitle()
@@ -155,7 +155,7 @@ class ArtistDetailActivity : AppCompatActivity() {
                 ))
             }
 
-            if(musicSrv!!.getStatus()){
+            if(musicSrv!!.isPlaying()){
                 smallPlayer.findViewById<Button>(R.id.view_small_player_btn_play).setBackgroundResource(
                     R.drawable.ic_pause_circle_outline
                 )

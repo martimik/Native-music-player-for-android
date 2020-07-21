@@ -2,17 +2,21 @@ package com.musicplayer.adapters
 
 import android.content.Context
 import android.content.Intent
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.TextView
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
-import com.musicplayer.*
+import com.musicplayer.R
 import com.musicplayer.activities.AlbumDetailActivity
 import com.musicplayer.activities.PlayerActivity
 import com.musicplayer.data.AudioModel
 import java.util.concurrent.TimeUnit
+
 
 class AlbumDetailAdapter : RecyclerView.Adapter<AlbumDetailAdapter.SongViewHolder> {
 
@@ -48,6 +52,14 @@ class AlbumDetailAdapter : RecyclerView.Adapter<AlbumDetailAdapter.SongViewHolde
             val intent = Intent(mContext, PlayerActivity::class.java)
             mContext.startActivity(intent)
         }
+
+        holder.addBtn.setOnClickListener {
+            (mContext as AlbumDetailActivity).addToPlaylist(mutableListOf<AudioModel>(mData[holder.adapterPosition]))
+            val toast = Toast.makeText(mContext, "Song added to playlist", Toast.LENGTH_SHORT)
+            toast.setGravity(Gravity.TOP, 0, 64)
+            toast.show()
+        }
+
     }
 
     override fun getItemCount(): Int {
@@ -60,6 +72,7 @@ class AlbumDetailAdapter : RecyclerView.Adapter<AlbumDetailAdapter.SongViewHolde
         var songNumber : TextView
         var songName: TextView
         var duration: TextView
+        var addBtn : Button
 
         constructor(itemView : View) : super(itemView){
             super.itemView
@@ -68,6 +81,7 @@ class AlbumDetailAdapter : RecyclerView.Adapter<AlbumDetailAdapter.SongViewHolde
             songNumber = itemView.findViewById(R.id.row_album_detail_tv_number)
             songName = itemView.findViewById(R.id.row_album_detail_tv_title)
             duration = itemView.findViewById(R.id.row_album_detail_tv_duration)
+            addBtn = itemView.findViewById(R.id.row_album_detail_btn_add)
         }
     }
 }

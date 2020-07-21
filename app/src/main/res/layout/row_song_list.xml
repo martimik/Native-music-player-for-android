@@ -14,8 +14,7 @@
         android:maxLines="1"
         android:paddingHorizontal="8dp"
         android:textColor="@color/white"
-        android:textSize="16sp"
-        android:textStyle="bold" />
+        android:textSize="16sp" />
 
     <TextView
         android:id="@+id/row_song_list_tv_artist"
@@ -25,5 +24,4 @@
         android:maxLines="1"
         android:paddingHorizontal="8dp"
         android:textColor="@color/grey" />
-
 </LinearLayout>

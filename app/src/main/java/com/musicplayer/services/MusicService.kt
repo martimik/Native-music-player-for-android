@@ -22,22 +22,24 @@ import java.lang.reflect.Type
 class MusicService : Service(),
     OnPreparedListener,
     MediaPlayer.OnErrorListener,
-    OnCompletionListener  {
+    OnCompletionListener {
 
     private val musicBind = MusicBinder()
-    private val gson : Gson = Gson()
+    private val gson: Gson = Gson()
 
-    private lateinit var player : MediaPlayer
+    private lateinit var player: MediaPlayer
     private lateinit var sharedPreferences: SharedPreferences
-    private lateinit var editor : SharedPreferences.Editor
+    private lateinit var editor: SharedPreferences.Editor
 
     private var playList = mutableListOf<AudioModel>()
+    private var playOrder = mutableListOf<Int>()
     private var songPos: Int = 0
-    private var timePos : Int = 0
-    private var startPlayback : Boolean = false
+    private var timePos: Int = 0
+    private var isShuffled: Boolean = false
+    private var startPlayback: Boolean = false
 
     inner class MusicBinder : Binder() {
-        fun getService() : MusicService {
+        fun getService(): MusicService {
             return this@MusicService
         }
     }
@@ -46,34 +48,46 @@ class MusicService : Service(),
         super.onCreate()
         player = MediaPlayer()
 
-        sharedPreferences  = this.getSharedPreferences("playerCache", Context.MODE_PRIVATE)
+        sharedPreferences = this.getSharedPreferences("playerCache", Context.MODE_PRIVATE)
         val data = sharedPreferences.getString("cachedPlaylist", null)
 
         val listType: Type = object : TypeToken<List<AudioModel?>?>() {}.type
 
-        if(data != null){
+        if (data != null) {
             playList = gson.fromJson(data, listType)
         }
 
         songPos = sharedPreferences.getInt("songPos", 0)
         timePos = sharedPreferences.getInt("timePos", 0)
+        isShuffled = sharedPreferences.getBoolean("isShuffled", false)
 
+        Log.i("test oncreate songpos: ", songPos.toString())
+
+        setOrder()
         initMusicPlayer()
 
     }
 
-    private fun initMusicPlayer(){
+    private fun initMusicPlayer() {
 
         player.setWakeMode(applicationContext, PowerManager.PARTIAL_WAKE_LOCK)
-        player.setAudioAttributes(AudioAttributes.Builder().setContentType(AudioAttributes.CONTENT_TYPE_MUSIC).build())
+        player.setAudioAttributes(
+            AudioAttributes.Builder().setContentType(AudioAttributes.CONTENT_TYPE_MUSIC).build()
+        )
 
         player.setOnPreparedListener(this)
         player.setOnCompletionListener(this)
         player.setOnErrorListener(this)
 
-        if(playList.size != 0) {
-            val song = playList[songPos]
-            val trackUri = ContentUris.withAppendedId(android.provider.MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, song.getAudioId())
+        if (playList.size != 0) {
+
+            val song = playList[playOrder[songPos]]
+            Log.i("Test", "test initmusicplayer: " + song.getTitle() + " songpos: " + songPos)
+
+            val trackUri = ContentUris.withAppendedId(
+                android.provider.MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
+                song.getAudioId()
+            )
 
             // Set media player data source
             try {
@@ -87,13 +101,15 @@ class MusicService : Service(),
         }
     }
 
-    fun setSource(start : Boolean){
+    fun setSource(start: Boolean) {
 
         player.reset()
         startPlayback = start
 
-        if(playList.size != 0) {
-            val song = playList[songPos]
+        Log.i("test setSource: ", "got here")
+
+        if (playList.size != 0) {
+            val song = playList[playOrder[songPos]]
             val trackUri = ContentUris.withAppendedId(
                 android.provider.MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
                 song.getAudioId()
@@ -104,7 +120,7 @@ class MusicService : Service(),
                 player.prepareAsync()
 
                 editor = sharedPreferences.edit()
-                editor.putInt("songPos", songPos)
+                editor.putInt("songPos", playOrder[songPos])
                 editor.apply()
 
             } catch (e: Exception) {
@@ -114,14 +130,14 @@ class MusicService : Service(),
     }
 
     override fun onPrepared(mp: MediaPlayer) {
-        if(startPlayback) mp.start()
+        if (startPlayback) mp.start()
 
         val intent = Intent("UI_UPDATE")
         this.sendBroadcast(intent)
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        Log.i("Player: ","Start")
+        Log.i("Player: ", "Start")
         return START_NOT_STICKY
 
     }
@@ -142,7 +158,7 @@ class MusicService : Service(),
         editor.apply()
 
         player.release()
-        Log.i("Player: ","Stop")
+        Log.i("Player: ", "Stop")
     }
 
     override fun onError(mp: MediaPlayer?, what: Int, extra: Int): Boolean {
@@ -152,14 +168,17 @@ class MusicService : Service(),
 
     override fun onCompletion(mp: MediaPlayer?) {
 
-        if(songPos < (playList.size  - 1)){
+        if (songPos < (playList.size - 1)) {
             songPos += 1
             setSource(true)
-        }
-        else {
+        } else {
             songPos = 0
             setSource(false)
         }
+    }
+
+    fun playlistExists(): Boolean {
+        return playList.isNotEmpty()
     }
 
     fun setPlaylist(newPlaylist: MutableList<AudioModel>) {
@@ -173,23 +192,32 @@ class MusicService : Service(),
         editor.apply()
     }
 
-    fun playlistExists() : Boolean {
-        return playList.isNotEmpty()
+    fun addToPlaylist(songs: MutableList<AudioModel>) {
+        playList = (playList + songs) as MutableList<AudioModel>
     }
 
-    fun setSong(newSong : Int) {
-        songPos = newSong
-    }
-
-    fun getSong() : AudioModel {
-        return playList[songPos]
-    }
-
-    fun getStatus() : Boolean {
+    fun isPlaying(): Boolean {
         return player.isPlaying
     }
 
-    fun getPosition() : Long {
+    fun isLooping(): Boolean {
+        return player.isLooping
+    }
+
+    fun isShuffled(): Boolean {
+        return isShuffled
+    }
+
+    fun setSong(newSong: Int) {
+        songPos = newSong
+        setOrder()
+    }
+
+    fun getCurrentTrack(): AudioModel {
+        return playList[playOrder[songPos]]
+    }
+
+    fun getPosition(): Long {
         return player.currentPosition.toLong()
     }
 
@@ -197,22 +225,29 @@ class MusicService : Service(),
         player.prepareAsync()
     }
 
-    fun seek(tPos : Int) {
-        player.seekTo(tPos * 1000)
+    fun pausePlay() {
+        if (player.isPlaying) {
+            player.pause()
+        }
     }
 
-    fun nextSong(){
-        if(songPos < (playList.size - 1)) {
-            songPos += 1
+    fun resumePlay() {
+        if (!player.isPlaying) {
+            player.start()
         }
-        else {
+    }
+
+    fun nextTrack() {
+        if (songPos < (playList.size - 1)) {
+            songPos += 1
+        } else {
             songPos = 0
         }
 
         setSource(player.isPlaying)
     }
 
-    fun prevSong(){
+    fun previousTrack() {
         when {
             player.currentPosition > 10000 -> {
                 player.seekTo(0)
@@ -228,15 +263,37 @@ class MusicService : Service(),
         setSource(player.isPlaying)
     }
 
-    fun pausePlay() {
-        if(player.isPlaying) {
-            player.pause()
-        }
+    fun seek(tPos: Int) {
+        player.seekTo(tPos * 1000)
     }
 
-    fun resumePlay() {
-        if(!player.isPlaying) {
-            player.start()
+    fun toggleShuffle() {
+
+        isShuffled = !isShuffled
+
+        setOrder()
+
+        editor = sharedPreferences.edit()
+        editor.putBoolean("isShuffled", isShuffled)
+        editor.apply()
+
+    }
+
+    fun toggleLoop(){
+        player.isLooping = !player.isLooping
+    }
+
+    private fun setOrder(){
+        playOrder = if(isShuffled) {
+            val temp = (0..playList.size).toMutableList()
+            temp.removeAt(songPos)
+            temp.shuffle()
+            temp.add(temp[0])
+            temp[0] = songPos
+            songPos = 0
+            temp
+        } else {
+            (0..playList.size).toMutableList()
         }
     }
 }

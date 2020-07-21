@@ -59,6 +59,7 @@
                     android:layout_gravity="bottom"
                     app:tabIndicatorColor="@color/white"
                     app:tabMode="scrollable" />
+
             </com.google.android.material.appbar.CollapsingToolbarLayout>
         </com.google.android.material.appbar.AppBarLayout>
 

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/colorPrimary"
+    android:padding="16dp">
+
+    <ImageView
+        android:id="@+id/view_notification_player_iv_cover"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/cover_placeholder" />
+
+    <TextView
+        android:id="@+id/view_notification_player_tv_title"
+        android:layout_width="0dp"
+        android:layout_height="24dp"
+        android:paddingHorizontal="8dp"
+        android:text="TextView"
+        app:layout_constraintBottom_toTopOf="@+id/view_notification_player_tv_artist"
+        app:layout_constraintEnd_toStartOf="@+id/view_notification_player_btn_play"
+        app:layout_constraintStart_toEndOf="@+id/view_notification_player_iv_cover"
+        app:layout_constraintTop_toTopOf="@+id/view_notification_player_iv_cover" />
+
+    <TextView
+        android:id="@+id/view_notification_player_tv_artist"
+        android:layout_width="0dp"
+        android:layout_height="24dp"
+        android:paddingHorizontal="8dp"
+        android:text="TextView"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/view_notification_player_btn_play"
+        app:layout_constraintStart_toEndOf="@+id/view_notification_player_iv_cover"
+        app:layout_constraintTop_toBottomOf="@id/view_notification_player_tv_title" />
+
+    <Button
+        android:id="@+id/view_notification_player_btn_play"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:background="@drawable/ic_pause_circle_outline"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+</androidx.constraintlayout.widget.ConstraintLayout>

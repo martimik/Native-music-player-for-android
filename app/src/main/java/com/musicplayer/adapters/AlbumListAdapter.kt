@@ -77,6 +77,6 @@ class AlbumListAdapter : RecyclerView.Adapter<AlbumListAdapter.AlbumViewHolder> 
             albumCover = itemView.findViewById(R.id.item_album_list_iv_cover)
             albumName = itemView.findViewById(R.id.item_album_list_tv_album)
             artistName = itemView.findViewById(R.id.item_album_list_tv_artist)
-    }
+        }
     }
 }

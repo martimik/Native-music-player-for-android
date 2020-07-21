@@ -30,8 +30,7 @@
             android:maxLines="1"
             android:paddingTop="8dp"
             android:textColor="@color/white"
-            android:textSize="14sp"
-            android:textStyle="bold" />
+            android:textSize="16sp" />
 
         <TextView
             android:id="@+id/row_album_detail_tv_duration"
@@ -40,6 +39,14 @@
             android:ellipsize="end"
             android:maxLines="1"
             android:paddingBottom="8dp"
-            android:textColor="@color/grey" />
+            android:textColor="@color/grey"
+            android:textSize="14sp" />
     </LinearLayout>
+
+    <Button
+        android:id="@+id/row_album_detail_btn_add"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_marginTop="-10dp"
+        android:background="@drawable/ic_playlist_add" />
 </LinearLayout>

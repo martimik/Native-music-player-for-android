@@ -5,7 +5,8 @@
     android:id="@+id/item_album_list"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_margin="16dp"
+    android:layout_marginHorizontal="16dp"
+    android:layout_marginVertical="8dp"
     android:orientation="vertical">
 
     <ImageView
@@ -24,8 +25,7 @@
         android:paddingTop="8dp"
         android:textAlignment="center"
         android:textColor="@color/white"
-        android:textSize="16sp"
-        android:textStyle="bold" />
+        android:textSize="16sp" />
 
     <TextView
         android:id="@+id/item_album_list_tv_artist"

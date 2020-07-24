@@ -1,20 +1,49 @@
 package com.musicplayer.fragments
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.musicplayer.R
+import com.musicplayer.adapters.PlaylistAdapter
+import com.musicplayer.services.MusicService
 
-// Possibly redundant fragment // TODO
-class PlaylistFragment : Fragment() {
+class PlaylistFragment : Fragment {
+
+    private var mContext: Context
+    private val musicSrv: MusicService?
+    private val fm: FragmentManager
+    private lateinit var v: View
+    private lateinit var recyclerView: RecyclerView
+
+    constructor(mContext: Context, musicService: MusicService?, fm: FragmentManager) : super() {
+        this.mContext = mContext
+        this.musicSrv = musicService
+        this.fm = fm
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.recycler_view, container, false)
+        this.v = inflater.inflate(R.layout.fragment_playlist, container, false)
+
+        recyclerView = v.findViewById(R.id.fragment_playlist_recyclerview)
+        val playlistAdapter = PlaylistAdapter(mContext, musicSrv)
+        recyclerView.layoutManager = LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false)
+        recyclerView.adapter = playlistAdapter
+
+        v.findViewById<Button>(R.id.fragment_playlist_btn_back).setOnClickListener{
+            fm.popBackStack()
+        }
+
+        return v
     }
 }

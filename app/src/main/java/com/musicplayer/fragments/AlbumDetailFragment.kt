@@ -13,7 +13,6 @@ import com.musicplayer.data.DataManager
 import com.musicplayer.R
 import com.musicplayer.data.AudioModel
 
-// Possibly redundant fragment // TODO
 class AlbumDetailFragment : Fragment {
 
     private var mContext : Context

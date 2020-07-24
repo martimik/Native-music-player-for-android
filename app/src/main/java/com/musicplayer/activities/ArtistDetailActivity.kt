@@ -11,6 +11,7 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
@@ -59,7 +60,7 @@ class ArtistDetailActivity : AppCompatActivity() {
             ))
         }
 
-        findViewById<LinearLayout>(R.id.small_player).setOnClickListener {
+        findViewById<ConstraintLayout>(R.id.small_player).setOnClickListener {
             val intent = Intent(this, PlayerActivity::class.java)
             this.startActivity(intent)
         }
@@ -128,11 +129,13 @@ class ArtistDetailActivity : AppCompatActivity() {
             this.unbindService(musicConnection)
             musicBound = false
         }
+
+        unregisterReceiver(broadCastReceiver)
     }
 
     private fun updateSmallPlayer(){
 
-        val smallPlayer = findViewById<LinearLayout>(R.id.small_player)
+        val smallPlayer = findViewById<ConstraintLayout>(R.id.small_player)
 
         if(musicSrv != null && musicSrv!!.playlistExists()) {
 

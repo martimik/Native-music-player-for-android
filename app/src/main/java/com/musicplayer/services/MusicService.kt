@@ -15,6 +15,7 @@ import android.os.PowerManager
 import android.util.Log
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import com.musicplayer.data.AlbumModel
 import com.musicplayer.data.AudioModel
 import java.lang.reflect.Type
 
@@ -61,8 +62,6 @@ class MusicService : Service(),
         timePos = sharedPreferences.getInt("timePos", 0)
         isShuffled = sharedPreferences.getBoolean("isShuffled", false)
 
-        Log.i("test oncreate songpos: ", songPos.toString())
-
         setOrder()
         initMusicPlayer()
 
@@ -82,7 +81,6 @@ class MusicService : Service(),
         if (playList.size != 0) {
 
             val song = playList[playOrder[songPos]]
-            Log.i("Test", "test initmusicplayer: " + song.getTitle() + " songpos: " + songPos)
 
             val trackUri = ContentUris.withAppendedId(
                 android.provider.MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
@@ -105,8 +103,6 @@ class MusicService : Service(),
 
         player.reset()
         startPlayback = start
-
-        Log.i("test setSource: ", "got here")
 
         if (playList.size != 0) {
             val song = playList[playOrder[songPos]]
@@ -190,6 +186,18 @@ class MusicService : Service(),
         editor = sharedPreferences.edit()
         editor.putString("cachedPlaylist", objectString)
         editor.apply()
+    }
+
+    fun getPlaylist(): MutableList<AudioModel> {
+
+        val temp = mutableListOf<AudioModel>()
+
+        for (i in 0 until playOrder.size) {
+            val pos = playOrder[i]
+            temp.add(playList[pos])
+        }
+
+        return temp
     }
 
     fun addToPlaylist(songs: MutableList<AudioModel>) {
@@ -284,8 +292,10 @@ class MusicService : Service(),
     }
 
     private fun setOrder(){
+        Log.i("test Set order pre", playOrder.toString())
+        val size = playList.size - 1
         playOrder = if(isShuffled) {
-            val temp = (0..playList.size).toMutableList()
+            val temp = (0..size).toMutableList()
             temp.removeAt(songPos)
             temp.shuffle()
             temp.add(temp[0])
@@ -293,7 +303,7 @@ class MusicService : Service(),
             songPos = 0
             temp
         } else {
-            (0..playList.size).toMutableList()
+            (0..size).toMutableList()
         }
     }
 }

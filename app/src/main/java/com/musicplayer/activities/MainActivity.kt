@@ -11,9 +11,9 @@ import android.os.IBinder
 import android.view.View
 import android.widget.Button
 import android.widget.ImageView
-import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.viewpager.widget.ViewPager
@@ -47,7 +47,7 @@ class MainActivity : AppCompatActivity() {
             ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), 10)
         }
 
-        super.onCreate(savedInstanceState)
+        super.onCreate(null)
         setContentView(R.layout.activity_main)
 
         val viewPager: ViewPager = findViewById(R.id.view_pager)
@@ -62,7 +62,7 @@ class MainActivity : AppCompatActivity() {
         registerReceiver()
         createNotificationChannel()
 
-        // sectionsPagerAdapter.addFragment(PlaylistFragment(), "Playlists") // TODO
+        //sectionsPagerAdapter.addFragment(PlaylistFragment(this, musicSrv!!), "Playlists")
         sectionsPagerAdapter.addFragment(AlbumListFragment(this), "Albums")
         sectionsPagerAdapter.addFragment(ArtistListFragment(this), "Artists")
         sectionsPagerAdapter.addFragment(SongListFragment(this), "Songs")
@@ -70,7 +70,7 @@ class MainActivity : AppCompatActivity() {
         viewPager.adapter = sectionsPagerAdapter
         tabs.setupWithViewPager(viewPager)
 
-        findViewById<LinearLayout>(R.id.small_player).setOnClickListener {
+        findViewById<ConstraintLayout>(R.id.small_player).setOnClickListener {
             val intent = Intent(this, PlayerActivity::class.java)
             this.startActivity(intent)
         }
@@ -159,7 +159,7 @@ class MainActivity : AppCompatActivity() {
 
     fun updateSmallPlayer(){
 
-        val smallPlayer = findViewById<LinearLayout>(R.id.small_player)
+        val smallPlayer = findViewById<ConstraintLayout>(R.id.small_player)
 
         if(musicSrv != null && musicSrv!!.playlistExists()) {
 

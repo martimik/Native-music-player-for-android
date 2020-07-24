@@ -11,20 +11,19 @@ V. 0.2
 <img src="./images/artist_detail_2.jpg" alt="drawing" height="500"/>
 <img src="./images/album_detail.jpg" alt="drawing" height="500"/>
 <img src="./images/player_main.jpg" alt="drawing" height="500"/>
+<img src="./images/playlist.jpg" alt="drawing" height="500"/>
 
 ### Implementoidut ominaisuudet
 
-- Sovellus hakee musiikkitiedostot puhelimesta ja listaa ne.
-- Musiikin toistamisesta vastaava service.
-- Navigointi soittolistan kappaleiden välillä.
-- Soiton hallitseminen/playerin avaminen alanäkymän avulla.
-- Sovellus tallentaa suljettaessa viimeisimmän soittolistan, kappaleen sekä toiston ajankohdan ja avatessa palaa näihin.
-- Seekbar soittimessa.
+- Musiikkitiedostojen hakeminen ja listaus.
+- Musiikin toistaminen mediaplayerin sekä servicen avulla.
+- Toiston tilan tallennus.
+- Seekbar, suffle ja repeat soittimessa.
 - UI:n päivitys lähettämällä local broadcast MusicServicestä.
+- Soittolistan näyttäminen.
 
 ### TODO
 
-- Toiston hallinta, shuffle/repeat
 - Soittolistan hallinta, kappaleiden lisääminen ja poistaminen
 - Sovelluksen hallinta notificaatioalueen kautta
 

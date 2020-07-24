@@ -11,15 +11,10 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.musicplayer.*
 import com.musicplayer.adapters.AlbumListAdapter
 
-class AlbumListFragment : Fragment {
+class AlbumListFragment(private var mContext: Context) : Fragment() {
 
-    private var mContext : Context
     private lateinit var v : View
     private lateinit var recyclerView : RecyclerView
-
-    constructor(mContext : Context) : super() {
-        this.mContext = mContext
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater,

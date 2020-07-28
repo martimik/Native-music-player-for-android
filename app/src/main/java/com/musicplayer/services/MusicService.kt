@@ -18,6 +18,7 @@ import com.google.gson.reflect.TypeToken
 import com.musicplayer.data.AlbumModel
 import com.musicplayer.data.AudioModel
 import java.lang.reflect.Type
+import java.util.*
 
 
 class MusicService : Service(),
@@ -99,7 +100,7 @@ class MusicService : Service(),
         }
     }
 
-    fun setSource(start: Boolean) {
+    private fun setSource(start: Boolean) {
 
         player.reset()
         startPlayback = start
@@ -181,11 +182,8 @@ class MusicService : Service(),
 
         playList = newPlaylist
 
-        val objectString = gson.toJson(newPlaylist)
-
-        editor = sharedPreferences.edit()
-        editor.putString("cachedPlaylist", objectString)
-        editor.apply()
+        setOrder()
+        savePlaylist()
     }
 
     fun getPlaylist(): MutableList<AudioModel> {
@@ -218,11 +216,15 @@ class MusicService : Service(),
 
     fun setSong(newSong: Int) {
         songPos = newSong
-        setOrder()
+        setSource(true)
     }
 
     fun getCurrentTrack(): AudioModel {
         return playList[playOrder[songPos]]
+    }
+
+    fun getCurrentSongPos(): Int {
+        return songPos
     }
 
     fun getPosition(): Long {
@@ -279,6 +281,7 @@ class MusicService : Service(),
 
         isShuffled = !isShuffled
 
+        if(!isShuffled) songPos = playOrder[songPos]
         setOrder()
 
         editor = sharedPreferences.edit()
@@ -291,8 +294,42 @@ class MusicService : Service(),
         player.isLooping = !player.isLooping
     }
 
+    fun reorderPlaylist(from: Int, to: Int) {
+
+        val curSong = playList[playOrder[songPos]]
+
+        when {
+            from < to -> {
+                for(i in from until to) {
+                    Collections.swap(playOrder, i, i + 1)
+                }
+            }
+            to == 0 -> {
+                for(i in from downTo 1){
+                    Collections.swap(playOrder, i, i - 1)
+                }
+            }
+            else -> {
+                for(i in from downTo to + 1){
+                    Collections.swap(playOrder, i, i -1)
+                }
+            }
+        }
+
+        songPos = playOrder.indexOf(playList.indexOf(curSong))
+
+        val intent = Intent("UI_UPDATE")
+        this.sendBroadcast(intent)
+
+        savePlaylist()
+    }
+
+    fun removeFromPlaylist(pos: Int){
+        playList.removeAt(pos)
+        playOrder.remove(pos)
+    }
+
     private fun setOrder(){
-        Log.i("test Set order pre", playOrder.toString())
         val size = playList.size - 1
         playOrder = if(isShuffled) {
             val temp = (0..size).toMutableList()
@@ -305,5 +342,13 @@ class MusicService : Service(),
         } else {
             (0..size).toMutableList()
         }
+    }
+
+    private fun savePlaylist(){
+        val objectString = gson.toJson(playList)
+
+        editor = sharedPreferences.edit()
+        editor.putString("cachedPlaylist", objectString)
+        editor.apply()
     }
 }

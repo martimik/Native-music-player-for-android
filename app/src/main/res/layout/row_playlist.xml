@@ -8,31 +8,35 @@
     android:paddingHorizontal="8dp"
     android:paddingVertical="16dp">
 
-    <Button
+    <ImageButton
         android:id="@+id/row_playlist_btn_drag"
-        android:layout_width="32dp"
-        android:layout_height="32dp"
-        android:background="@drawable/ic_drag_handle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@color/cardview_shadow_end_color"
+        android:padding="16dp"
+        android:src="@drawable/ic_drag_handle"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:src="@drawable/ic_drag_handle" />
 
     <ImageView
         android:id="@+id/row_playlist_iv_cover"
         android:layout_width="48dp"
         android:layout_height="48dp"
-        android:layout_marginStart="16dp"
+        android:layout_marginStart="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/row_playlist_btn_drag"
+        app:layout_constraintStart_toEndOf="@+id/row_playlist_btn_clear"
         app:layout_constraintTop_toTopOf="parent"
         tools:srcCompat="@drawable/cover_placeholder" />
 
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:layout_marginEnd="8dp"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/row_playlist_btn_clear"
+        app:layout_constraintEnd_toStartOf="@id/row_playlist_btn_drag"
         app:layout_constraintStart_toEndOf="@+id/row_playlist_iv_cover"
         app:layout_constraintTop_toTopOf="parent">
 
@@ -59,12 +63,14 @@
             android:textStyle="italic" />
     </LinearLayout>
 
-    <Button
+    <ImageButton
         android:id="@+id/row_playlist_btn_clear"
-        android:layout_width="24dp"
-        android:layout_height="24dp"
-        android:background="@drawable/ic_clear"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@color/cardview_shadow_end_color"
+        android:padding="12dp"
+        android:src="@drawable/ic_clear"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

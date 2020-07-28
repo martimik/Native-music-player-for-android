@@ -40,7 +40,6 @@ class PlayerFragment : Fragment {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        registerReceiver()
     }
 
     override fun onCreateView(

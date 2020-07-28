@@ -28,8 +28,7 @@
                     android:id="@+id/fragment_playlist_btn_back"
                     android:layout_width="48dp"
                     android:layout_height="48dp"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginStart="0dp"
+                    android:layout_marginTop="12dp"
                     android:background="@drawable/ic_chevron_left" />
 
                 <TextView

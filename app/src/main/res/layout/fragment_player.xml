@@ -14,7 +14,7 @@
         android:id="@+id/activity_player_btn_return"
         android:layout_width="48dp"
         android:layout_height="48dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="12dp"
         android:background="@drawable/ic_chevron_left"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -36,7 +36,7 @@
         android:id="@+id/activity_player_btn_playlist"
         android:layout_width="36dp"
         android:layout_height="36dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="20dp"
         android:layout_marginEnd="24dp"
         android:background="@drawable/ic_playlist_open"
         app:layout_constraintEnd_toEndOf="parent"

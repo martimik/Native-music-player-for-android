@@ -33,16 +33,13 @@ class PlaylistFragment : Fragment, StartDragListener {
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
         this.v = inflater.inflate(R.layout.fragment_playlist, container, false)
 
         recyclerView = v.findViewById(R.id.fragment_playlist_recyclerview)
         val playlistAdapter = PlaylistAdapter(mContext, musicSrv, this)
-        recyclerView.layoutManager =
-            LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false)
+        recyclerView.layoutManager = LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false)
         recyclerView.adapter = playlistAdapter
 
         val callback: ItemTouchHelper.Callback = ItemMoveCallback(playlistAdapter)

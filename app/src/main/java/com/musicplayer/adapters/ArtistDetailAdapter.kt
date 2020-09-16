@@ -35,8 +35,7 @@ class ArtistDetailAdapter : RecyclerView.Adapter<ArtistDetailAdapter.AlbumViewHo
 
             val intent = Intent(mContext, AlbumDetailActivity::class.java).apply {
                 putExtra(
-                    "albumPosition",
-                    DataManager.returnInstance().getAlbumIndex(mData[viewHolder.adapterPosition])
+                    "albumPosition", DataManager.returnInstance().getAlbumIndex(mData[viewHolder.adapterPosition])
                 )
             }
 
@@ -59,8 +58,7 @@ class ArtistDetailAdapter : RecyclerView.Adapter<ArtistDetailAdapter.AlbumViewHo
         if (holder.albumCover.drawable == null) {
             holder.albumCover.setImageDrawable(
                 ContextCompat.getDrawable(
-                    mContext,
-                    R.drawable.cover_placeholder
+                    mContext, R.drawable.cover_placeholder
                 )
             )
         }

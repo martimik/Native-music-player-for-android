@@ -40,27 +40,11 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
-        if (ContextCompat.checkSelfPermission(
-                this,
-                Manifest.permission.READ_EXTERNAL_STORAGE
-            ) != PackageManager.PERMISSION_GRANTED
-        ) {
-            ActivityCompat.requestPermissions(
-                this,
-                arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE),
-                10
-            )
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE), 10)
         }
-        if (ContextCompat.checkSelfPermission(
-                this,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE
-            ) != PackageManager.PERMISSION_GRANTED
-        ) {
-            ActivityCompat.requestPermissions(
-                this,
-                arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
-                10
-            )
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), 10)
         }
 
         super.onCreate(null)
@@ -68,10 +52,7 @@ class MainActivity : AppCompatActivity() {
 
         val viewPager: ViewPager = findViewById(R.id.view_pager)
         val tabs: TabLayout = findViewById(R.id.tabs)
-        val sectionsPagerAdapter = SectionsPagerAdapter(
-            this,
-            supportFragmentManager
-        )
+        val sectionsPagerAdapter = SectionsPagerAdapter(this, supportFragmentManager)
 
         dataManager.prepare(this)
 
@@ -95,23 +76,21 @@ class MainActivity : AppCompatActivity() {
             if (musicSrv!!.isPlaying()) {
                 musicSrv?.pausePlay()
                 it.setBackgroundResource(R.drawable.ic_play_circle_outline)
-            } else {
+            }
+            else {
                 musicSrv?.resumePlay()
                 it.setBackgroundResource(R.drawable.ic_pause_circle_outline)
             }
         }
-
     }
 
     // Service connection
     private val musicConnection: ServiceConnection = object : ServiceConnection {
         override fun onServiceConnected(name: ComponentName, service: IBinder) {
+
             val binder = service as MusicService.MusicBinder
-
             musicSrv = binder.getService()
-
             musicBound = true
-
             updateSmallPlayer()
         }
 
@@ -129,10 +108,8 @@ class MainActivity : AppCompatActivity() {
             description = descriptionText
         }
         // Register the channel with the system
-        val notificationManager: NotificationManager =
-            getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        val notificationManager: NotificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         notificationManager.createNotificationChannel(channel)
-
     }
 
     // Bind musicService on start
@@ -185,10 +162,8 @@ class MainActivity : AppCompatActivity() {
             val curSong = musicSrv?.getCurrentTrack()
 
             smallPlayer.visibility = View.VISIBLE
-            smallPlayer.findViewById<TextView>(R.id.view_small_player_tv_title).text =
-                curSong?.getTitle()
-            smallPlayer.findViewById<TextView>(R.id.view_small_player_tv_artist).text =
-                curSong?.getArtist()
+            smallPlayer.findViewById<TextView>(R.id.view_small_player_tv_title).text = curSong?.getTitle()
+            smallPlayer.findViewById<TextView>(R.id.view_small_player_tv_artist).text = curSong?.getArtist()
 
             val albumArt = smallPlayer.findViewById<ImageView>(R.id.view_small_player_iv_cover)
 
@@ -200,25 +175,24 @@ class MainActivity : AppCompatActivity() {
             if (albumArt.drawable == null) {
                 albumArt.setImageDrawable(
                     ContextCompat.getDrawable(
-                        this,
-                        R.drawable.cover_placeholder
+                        this, R.drawable.cover_placeholder
                     )
                 )
             }
 
             if (musicSrv!!.isPlaying()) {
-                smallPlayer.findViewById<Button>(R.id.view_small_player_btn_play)
-                    .setBackgroundResource(
-                        R.drawable.ic_pause_circle_outline
-                    )
-            } else {
-                smallPlayer.findViewById<Button>(R.id.view_small_player_btn_play)
-                    .setBackgroundResource(
-                        R.drawable.ic_play_circle_outline
-                    )
+                smallPlayer.findViewById<Button>(R.id.view_small_player_btn_play).setBackgroundResource(
+                    R.drawable.ic_pause_circle_outline
+                )
+            }
+            else {
+                smallPlayer.findViewById<Button>(R.id.view_small_player_btn_play).setBackgroundResource(
+                    R.drawable.ic_play_circle_outline
+                )
             }
 
-        } else {
+        }
+        else {
             smallPlayer.visibility = View.GONE
         }
     }
@@ -227,7 +201,6 @@ class MainActivity : AppCompatActivity() {
         broadCastReceiver = object : BroadcastReceiver() {
             override fun onReceive(context: Context?, intent: Intent) {
                 // val otpCode = intent.getStringExtra("UI_UPDATE")
-
                 updateSmallPlayer()
             }
         }

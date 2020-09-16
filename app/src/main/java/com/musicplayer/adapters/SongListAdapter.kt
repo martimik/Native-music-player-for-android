@@ -37,9 +37,7 @@ class SongListAdapter : RecyclerView.Adapter<SongListAdapter.SongViewHolder> {
         val duration = mData[position].getDuration()
 
         val artistNameAndDuration = String.format(
-            mData[position].getArtist() + " - %02d:%02d",
-            TimeUnit.MILLISECONDS.toMinutes(duration),
-            TimeUnit.MILLISECONDS.toSeconds(duration) - TimeUnit.MINUTES.toSeconds(
+            mData[position].getArtist() + " - %02d:%02d", TimeUnit.MILLISECONDS.toMinutes(duration), TimeUnit.MILLISECONDS.toSeconds(duration) - TimeUnit.MINUTES.toSeconds(
                 TimeUnit.MILLISECONDS.toMinutes(duration)
             )
         )

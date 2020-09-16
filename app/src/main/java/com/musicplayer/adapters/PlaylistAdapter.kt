@@ -24,8 +24,7 @@ import java.util.*
 import java.util.concurrent.TimeUnit
 
 
-class PlaylistAdapter : RecyclerView.Adapter<PlaylistAdapter.SongViewHolder>,
-    ItemMoveCallback.ItemTouchHelperContract {
+class PlaylistAdapter : RecyclerView.Adapter<PlaylistAdapter.SongViewHolder>, ItemMoveCallback.ItemTouchHelperContract {
 
     var mContext: Context
     private var mData = mutableListOf<AudioModel>()
@@ -34,9 +33,7 @@ class PlaylistAdapter : RecyclerView.Adapter<PlaylistAdapter.SongViewHolder>,
     private val mStartDragListener: StartDragListener
 
     constructor(
-        mContext: Context,
-        musicService: MusicService?,
-        startDragListener: StartDragListener
+        mContext: Context, musicService: MusicService?, startDragListener: StartDragListener
     ) : super() {
         this.mContext = mContext
         this.musicSrv = musicService
@@ -56,9 +53,7 @@ class PlaylistAdapter : RecyclerView.Adapter<PlaylistAdapter.SongViewHolder>,
         val duration = mData[position].getDuration()
 
         val artistNameAndDuration = String.format(
-            mData[position].getArtist() + " - %02d:%02d",
-            TimeUnit.MILLISECONDS.toMinutes(duration),
-            TimeUnit.MILLISECONDS.toSeconds(duration) - TimeUnit.MINUTES.toSeconds(
+            mData[position].getArtist() + " - %02d:%02d", TimeUnit.MILLISECONDS.toMinutes(duration), TimeUnit.MILLISECONDS.toSeconds(duration) - TimeUnit.MINUTES.toSeconds(
                 TimeUnit.MILLISECONDS.toMinutes(duration)
             )
         )
@@ -69,7 +64,8 @@ class PlaylistAdapter : RecyclerView.Adapter<PlaylistAdapter.SongViewHolder>,
         if (holder.adapterPosition == musicSrv?.getCurrentSongPos()) {
             holder.removeBtn.setImageResource(R.drawable.ic_play_arrow)
             holder.songListItem.setOnClickListener(null)
-        } else {
+        }
+        else {
             holder.removeBtn.setImageResource(R.drawable.ic_clear)
             holder.removeBtn.setOnClickListener {
                 musicSrv?.removeFromPlaylist(holder.adapterPosition)
@@ -84,9 +80,7 @@ class PlaylistAdapter : RecyclerView.Adapter<PlaylistAdapter.SongViewHolder>,
         }
 
         holder.dragBtn.setOnTouchListener(OnTouchListener { _, event ->
-            if (event.action ==
-                MotionEvent.ACTION_DOWN
-            ) {
+            if (event.action == MotionEvent.ACTION_DOWN) {
                 mStartDragListener.requestDrag(holder)
             }
             false
@@ -100,8 +94,7 @@ class PlaylistAdapter : RecyclerView.Adapter<PlaylistAdapter.SongViewHolder>,
         if (holder.albumCover.drawable == null) {
             holder.albumCover.setImageDrawable(
                 ContextCompat.getDrawable(
-                    mContext,
-                    R.drawable.cover_placeholder
+                    mContext, R.drawable.cover_placeholder
                 )
             )
         }
@@ -158,8 +151,7 @@ class PlaylistAdapter : RecyclerView.Adapter<PlaylistAdapter.SongViewHolder>,
     override fun onRowSelected(myViewHolder: SongViewHolder?) {
         myViewHolder?.itemView?.setBackgroundColor(
             ContextCompat.getColor(
-                mContext,
-                R.color.colorPrimaryDark
+                mContext, R.color.colorPrimaryDark
             )
         )
     }

@@ -20,8 +20,7 @@ import com.musicplayer.data.DataManager
 class ArtistListAdapter : RecyclerView.Adapter<ArtistListAdapter.ArtistViewHolder> {
 
     private var mContext: Context
-    private var mData: Map<String, List<AlbumModel>> = DataManager.returnInstance()
-        .getArtists()
+    private var mData: Map<String, List<AlbumModel>> = DataManager.returnInstance().getArtists()
 
     constructor(mContext: Context) : super() {
         this.mContext = mContext
@@ -48,8 +47,7 @@ class ArtistListAdapter : RecyclerView.Adapter<ArtistListAdapter.ArtistViewHolde
         if (holder.artistCover.drawable == null) {
             holder.artistCover.setImageDrawable(
                 ContextCompat.getDrawable(
-                    mContext,
-                    R.drawable.artist_placeholder
+                    mContext, R.drawable.artist_placeholder
                 )
             )
         }

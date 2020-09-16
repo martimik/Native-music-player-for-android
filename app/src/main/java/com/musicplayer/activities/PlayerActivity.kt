@@ -48,9 +48,7 @@ class PlayerActivity : FragmentActivity() {
     // Bind musicService on start
     private fun bindService() {
         bindService(
-            Intent(this, MusicService::class.java),
-            musicConnection,
-            Context.BIND_AUTO_CREATE
+            Intent(this, MusicService::class.java), musicConnection, Context.BIND_AUTO_CREATE
         )
         musicBound = true
     }
@@ -65,8 +63,6 @@ class PlayerActivity : FragmentActivity() {
     }
 
     fun startFragment() {
-        fm.beginTransaction()
-            .replace(R.id.activity_player_container, PlayerFragment(this, musicSrv, fm))
-            .commit()
+        fm.beginTransaction().replace(R.id.activity_player_container, PlayerFragment(this, musicSrv, fm)).commit()
     }
 }

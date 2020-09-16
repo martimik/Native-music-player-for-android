@@ -44,9 +44,7 @@ class PlayerFragment : Fragment {
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
 
         this.v = inflater.inflate(R.layout.fragment_player, container, false)
@@ -63,7 +61,8 @@ class PlayerFragment : Fragment {
             if (musicSrv!!.isPlaying()) {
                 musicSrv!!.pausePlay()
                 btn.setImageResource(R.drawable.ic_play_circle_filled)
-            } else {
+            }
+            else {
                 musicSrv!!.resumePlay()
                 btn.setImageResource(R.drawable.ic_pause_circle_filled)
             }
@@ -82,9 +81,7 @@ class PlayerFragment : Fragment {
         }
 
         // Seek bar listener
-        view.findViewById<SeekBar>(R.id.activity_player_sb_progressbar)
-            .setOnSeekBarChangeListener(object :
-                SeekBar.OnSeekBarChangeListener {
+        view.findViewById<SeekBar>(R.id.activity_player_sb_progressbar).setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
 
                 override fun onStopTrackingTouch(seekBar: SeekBar) {
                     val progress = seekBar.progress
@@ -99,14 +96,11 @@ class PlayerFragment : Fragment {
                 override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
                     if (fromUser) {
                         val currentDuration = (progress * 1000).toLong()
-                        view.findViewById<TextView>(R.id.activity_player_tv_progress).text =
-                            String.format(
-                                "%02d:%02d",
-                                TimeUnit.MILLISECONDS.toMinutes(currentDuration),
-                                TimeUnit.MILLISECONDS.toSeconds(currentDuration) - TimeUnit.MINUTES.toSeconds(
-                                    TimeUnit.MILLISECONDS.toMinutes(currentDuration)
-                                )
+                        view.findViewById<TextView>(R.id.activity_player_tv_progress).text = String.format(
+                            "%02d:%02d", TimeUnit.MILLISECONDS.toMinutes(currentDuration), TimeUnit.MILLISECONDS.toSeconds(currentDuration) - TimeUnit.MINUTES.toSeconds(
+                                TimeUnit.MILLISECONDS.toMinutes(currentDuration)
                             )
+                        )
                     }
                 }
             })
@@ -120,7 +114,8 @@ class PlayerFragment : Fragment {
 
             if (musicSrv!!.isShuffled()) {
                 btn.setColorFilter(ContextCompat.getColor(mContext, R.color.white))
-            } else {
+            }
+            else {
                 btn.setColorFilter(ContextCompat.getColor(mContext, R.color.green))
             }
             musicSrv!!.toggleShuffle()
@@ -133,7 +128,8 @@ class PlayerFragment : Fragment {
 
             if (musicSrv!!.isLooping()) {
                 btn.setColorFilter(ContextCompat.getColor(mContext, R.color.white))
-            } else {
+            }
+            else {
                 btn.setColorFilter(ContextCompat.getColor(mContext, R.color.green))
             }
             musicSrv!!.toggleLoop()
@@ -148,13 +144,9 @@ class PlayerFragment : Fragment {
         view.findViewById<ImageButton>(R.id.activity_player_btn_playlist).setOnClickListener {
             if (v.findViewById<ConstraintLayout>(R.id.activity_player_cl_container) != null) {
                 if (savedInstanceState == null) {
-                    fm.beginTransaction()
-                        .replace(
-                            R.id.activity_player_container,
-                            PlaylistFragment(mContext, musicSrv, fm)
-                        )
-                        .addToBackStack(null)
-                        .commit()
+                    fm.beginTransaction().replace(
+                            R.id.activity_player_container, PlaylistFragment(mContext, musicSrv, fm)
+                        ).addToBackStack(null).commit()
                 }
             }
         }
@@ -199,15 +191,12 @@ class PlayerFragment : Fragment {
             val view = v.findViewById<ConstraintLayout>(R.id.activity_player_cl_container)
 
             view.findViewById<TextView>(R.id.activity_player_tv_progress).text = String.format(
-                "%02d:%02d",
-                TimeUnit.MILLISECONDS.toMinutes(currentDuration),
-                TimeUnit.MILLISECONDS.toSeconds(currentDuration) - TimeUnit.MINUTES.toSeconds(
+                "%02d:%02d", TimeUnit.MILLISECONDS.toMinutes(currentDuration), TimeUnit.MILLISECONDS.toSeconds(currentDuration) - TimeUnit.MINUTES.toSeconds(
                     TimeUnit.MILLISECONDS.toMinutes(currentDuration)
                 )
             )
 
-            view.findViewById<SeekBar>(R.id.activity_player_sb_progressbar).progress =
-                (currentDuration / 1000).toInt()
+            view.findViewById<SeekBar>(R.id.activity_player_sb_progressbar).progress = (currentDuration / 1000).toInt()
 
             // Run this thread again after 1 second
             handler.postDelayed(this, 100)
@@ -234,16 +223,14 @@ class PlayerFragment : Fragment {
         val view = v.findViewById<ConstraintLayout>(R.id.activity_player_cl_container)
 
         if (musicSrv!!.isPlaying()) {
-            v.findViewById<ImageButton>(R.id.activity_player_btn_play)
-                .setImageResource(R.drawable.ic_pause_circle_filled)
-        } else {
-            v.findViewById<ImageButton>(R.id.activity_player_btn_play)
-                .setImageResource(R.drawable.ic_play_circle_filled)
+            v.findViewById<ImageButton>(R.id.activity_player_btn_play).setImageResource(R.drawable.ic_pause_circle_filled)
+        }
+        else {
+            v.findViewById<ImageButton>(R.id.activity_player_btn_play).setImageResource(R.drawable.ic_play_circle_filled)
         }
         if (musicSrv!!.isShuffled()) {
             DrawableCompat.setTint(
-                DrawableCompat.wrap(v.findViewById<ImageButton>(R.id.activity_player_btn_shuffle).background),
-                ContextCompat.getColor(mContext, R.color.green)
+                DrawableCompat.wrap(v.findViewById<ImageButton>(R.id.activity_player_btn_shuffle).background), ContextCompat.getColor(mContext, R.color.green)
             )
         }
 
@@ -252,12 +239,9 @@ class PlayerFragment : Fragment {
 
         val duration = currentSong.getDuration()
 
-        view.findViewById<SeekBar>(R.id.activity_player_sb_progressbar).max =
-            (duration / 1000).toInt()
+        view.findViewById<SeekBar>(R.id.activity_player_sb_progressbar).max = (duration / 1000).toInt()
         view.findViewById<TextView>(R.id.activity_player_tv_duration).text = String.format(
-            "%02d:%02d",
-            TimeUnit.MILLISECONDS.toMinutes(duration),
-            TimeUnit.MILLISECONDS.toSeconds(duration) - TimeUnit.MINUTES.toSeconds(
+            "%02d:%02d", TimeUnit.MILLISECONDS.toMinutes(duration), TimeUnit.MILLISECONDS.toSeconds(duration) - TimeUnit.MINUTES.toSeconds(
                 TimeUnit.MILLISECONDS.toMinutes(duration)
             )
         )
@@ -274,8 +258,7 @@ class PlayerFragment : Fragment {
         if (albumArt.drawable == null) {
             albumArt.setImageDrawable(
                 ContextCompat.getDrawable(
-                    mContext,
-                    R.drawable.cover_placeholder
+                    mContext, R.drawable.cover_placeholder
                 )
             )
         }

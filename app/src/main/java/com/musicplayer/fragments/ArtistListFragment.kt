@@ -22,9 +22,7 @@ class ArtistListFragment : Fragment {
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
 
         this.v = inflater.inflate(R.layout.recycler_view, container, false)
@@ -32,8 +30,7 @@ class ArtistListFragment : Fragment {
         recyclerView.setHasFixedSize(true)
         recyclerView.setItemViewCacheSize(20)
         val artistListAdapter = ArtistListAdapter(mContext)
-        recyclerView.layoutManager =
-            StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL)
+        recyclerView.layoutManager = StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL)
         recyclerView.adapter = artistListAdapter
         return v
     }

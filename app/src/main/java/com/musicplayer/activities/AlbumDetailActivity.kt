@@ -74,7 +74,8 @@ class AlbumDetailActivity : AppCompatActivity() {
             if (musicSrv!!.isPlaying()) {
                 musicSrv?.pausePlay()
                 it.setBackgroundResource(R.drawable.ic_play_circle_outline)
-            } else {
+            }
+            else {
                 musicSrv?.resumePlay()
                 it.setBackgroundResource(R.drawable.ic_pause_circle_outline)
             }
@@ -168,8 +169,7 @@ class AlbumDetailActivity : AppCompatActivity() {
             if (albumArt.drawable == null) {
                 albumArt.setImageDrawable(
                     ContextCompat.getDrawable(
-                        this,
-                        R.drawable.cover_placeholder
+                        this, R.drawable.cover_placeholder
                     )
                 )
             }
@@ -178,13 +178,15 @@ class AlbumDetailActivity : AppCompatActivity() {
                 smallPlayer.findViewById<Button>(R.id.view_small_player_btn_play).setBackgroundResource(
                     R.drawable.ic_pause_circle_outline
                 )
-            } else {
+            }
+            else {
                 smallPlayer.findViewById<Button>(R.id.view_small_player_btn_play).setBackgroundResource(
                     R.drawable.ic_play_circle_outline
                 )
             }
 
-        } else {
+        }
+        else {
             smallPlayer.visibility = View.GONE
         }
     }

@@ -17,9 +17,7 @@ class AlbumListFragment(private var mContext: Context) : Fragment() {
     private lateinit var recyclerView: RecyclerView
 
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
 
         this.v = inflater.inflate(R.layout.recycler_view, container, false)
@@ -27,8 +25,7 @@ class AlbumListFragment(private var mContext: Context) : Fragment() {
         recyclerView.setHasFixedSize(true)
         recyclerView.setItemViewCacheSize(30)
         val albumListAdapter = AlbumListAdapter(mContext)
-        recyclerView.layoutManager =
-            StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
+        recyclerView.layoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
         recyclerView.adapter = albumListAdapter
         return v
     }

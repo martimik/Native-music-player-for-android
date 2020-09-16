@@ -56,8 +56,7 @@ class ArtistDetailActivity : AppCompatActivity() {
         if (artistArt.drawable == null) {
             artistArt.setImageDrawable(
                 ContextCompat.getDrawable(
-                    this,
-                    R.drawable.artist_placeholder
+                    this, R.drawable.artist_placeholder
                 )
             )
         }
@@ -71,34 +70,30 @@ class ArtistDetailActivity : AppCompatActivity() {
             if (musicSrv!!.isPlaying()) {
                 musicSrv?.pausePlay()
                 it.setBackgroundResource(R.drawable.ic_play_circle_outline)
-            } else {
+            }
+            else {
                 musicSrv?.resumePlay()
                 it.setBackgroundResource(R.drawable.ic_pause_circle_outline)
             }
         }
 
-        view.findViewById<CollapsingToolbarLayout>(R.id.collapsing_toolbar)
-            .setCollapsedTitleTextColor(
+        view.findViewById<CollapsingToolbarLayout>(R.id.collapsing_toolbar).setCollapsedTitleTextColor(
                 ColorStateList.valueOf(
                     ContextCompat.getColor(
-                        this,
-                        R.color.white
+                        this, R.color.white
                     )
                 )
             )
-        view.findViewById<CollapsingToolbarLayout>(R.id.collapsing_toolbar)
-            .setExpandedTitleTextColor(
+        view.findViewById<CollapsingToolbarLayout>(R.id.collapsing_toolbar).setExpandedTitleTextColor(
                 ColorStateList.valueOf(
                     ContextCompat.getColor(
-                        this,
-                        R.color.white
+                        this, R.color.white
                     )
                 )
             )
 
         val recyclerView = findViewById<RecyclerView>(R.id.recyclerView)
-        recyclerView.layoutManager =
-            StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
+        recyclerView.layoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
         recyclerView.adapter = ArtistDetailAdapter(this, mData)
 
     }
@@ -155,10 +150,8 @@ class ArtistDetailActivity : AppCompatActivity() {
             val curSong = musicSrv?.getCurrentTrack()
 
             smallPlayer.visibility = View.VISIBLE
-            smallPlayer.findViewById<TextView>(R.id.view_small_player_tv_title).text =
-                curSong?.getTitle()
-            smallPlayer.findViewById<TextView>(R.id.view_small_player_tv_artist).text =
-                curSong?.getArtist()
+            smallPlayer.findViewById<TextView>(R.id.view_small_player_tv_title).text = curSong?.getTitle()
+            smallPlayer.findViewById<TextView>(R.id.view_small_player_tv_artist).text = curSong?.getArtist()
 
             val albumArt = smallPlayer.findViewById<ImageView>(R.id.view_small_player_iv_cover)
 
@@ -170,25 +163,24 @@ class ArtistDetailActivity : AppCompatActivity() {
             if (albumArt.drawable == null) {
                 albumArt.setImageDrawable(
                     ContextCompat.getDrawable(
-                        this,
-                        R.drawable.cover_placeholder
+                        this, R.drawable.cover_placeholder
                     )
                 )
             }
 
             if (musicSrv!!.isPlaying()) {
-                smallPlayer.findViewById<Button>(R.id.view_small_player_btn_play)
-                    .setBackgroundResource(
+                smallPlayer.findViewById<Button>(R.id.view_small_player_btn_play).setBackgroundResource(
                         R.drawable.ic_pause_circle_outline
                     )
-            } else {
-                smallPlayer.findViewById<Button>(R.id.view_small_player_btn_play)
-                    .setBackgroundResource(
+            }
+            else {
+                smallPlayer.findViewById<Button>(R.id.view_small_player_btn_play).setBackgroundResource(
                         R.drawable.ic_play_circle_outline
                     )
             }
 
-        } else {
+        }
+        else {
             smallPlayer.visibility = View.GONE
         }
     }

@@ -22,16 +22,13 @@ class SongListFragment : Fragment {
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
 
         this.v = inflater.inflate(R.layout.recycler_view, container, false)
         recyclerView = v.findViewById(R.id.list_recyclerview)
         val songListAdapter = SongListAdapter(mContext)
-        recyclerView.layoutManager =
-            StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL)
+        recyclerView.layoutManager = StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL)
         recyclerView.adapter = songListAdapter
         return v
     }

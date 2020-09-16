@@ -14,13 +14,7 @@ class AudioModel : Serializable {
     private var trackNumber: String
 
     constructor(
-        audioID: Long,
-        albumId: Long,
-        name: String,
-        album: String,
-        artist: String,
-        duration: Long,
-        trackNumber: String /*, year: String, numerOftracks: String */
+        audioID: Long, albumId: Long, name: String, album: String, artist: String, duration: Long, trackNumber: String /*, year: String, numerOftracks: String */
     ) {
         this.audioID = audioID
         this.albumID = albumId

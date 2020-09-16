@@ -36,11 +36,7 @@ class DataManager {
 
         // Query files from external memory
         val cursor = context.contentResolver.query(
-            uri,
-            projection,
-            MediaStore.Audio.Media.IS_MUSIC + "!= 0",
-            null,
-            null
+            uri, projection, MediaStore.Audio.Media.IS_MUSIC + "!= 0", null, null
         )
 
         if (cursor != null) {
@@ -55,13 +51,7 @@ class DataManager {
                 val trackNumber = cursor.getString(6) ?: ""
 
                 val audioModel = AudioModel(
-                    audioID,
-                    albumID,
-                    name,
-                    album,
-                    artist,
-                    duration,
-                    trackNumber
+                    audioID, albumID, name, album, artist, duration, trackNumber
                 )
                 // Log.i("key", albumID.toString())
 
@@ -79,10 +69,7 @@ class DataManager {
             it.value.sortedBy { track -> track.getTrackNumber() }
             albumList.add(
                 AlbumModel(
-                    it.value[0].getAlbumId(),
-                    it.key,
-                    it.value[0].getArtist(),
-                    it.value
+                    it.value[0].getAlbumId(), it.key, it.value[0].getArtist(), it.value
                 )
             )
         }

@@ -1,8 +1,8 @@
-# Generic music player - Natiivi musiikkisoitin androidille
+# Generic music player - Native mediaplayer for Android 10
 
 ## Status
 
-V. 0.3
+V. 1.0
 
 <img src="./images/main_albums.jpg" alt="drawing" height="500"/>
 <img src="./images/main_artists.jpg" alt="drawing" height="500"/>
@@ -14,19 +14,15 @@ V. 0.3
 <img src="./images/player_main.jpg" alt="drawing" height="500"/>
 <img src="./images/playlist.jpg" alt="drawing" height="500"/>
 
-### Implementoidut ominaisuudet
+### Implemented features
 
-- Musiikkitiedostojen hakeminen ja listaus.
-- Musiikin toistaminen mediaplayerin avulla.
-- Toiston tilan tallennus kun sovellus suljetaan.
-- Seekbar, suffle ja repeat soittimessa.
-- UI:n päivitys mediatoiston tilan vaihtuessa.
-- Soittolistan näyttäminen, hallinta, sekä kappaleiden lisääminen ja poistaminen.
+- Fetching local media files from phones storage.
+- Media playback with Music Player.
+- Saving playback state when the app is closed.
+- Seekbar, suffle and repeat in player.
+- UI updates when mediaplayer state is changed.
+- Playlist display, reorder, adding and deleting songs.
 
-### TODO
-
-- Sovelluksen hallinta notificaatioalueen kautta
-
-## Kehitysympäristö
+## Developement enviroment/requirements
 
 * Android 10, api level 29

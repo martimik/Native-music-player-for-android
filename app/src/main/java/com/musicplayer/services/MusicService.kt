@@ -23,10 +23,7 @@ import java.lang.reflect.Type
 import java.util.*
 
 
-class MusicService : Service(),
-    OnPreparedListener,
-    MediaPlayer.OnErrorListener,
-    OnCompletionListener {
+class MusicService : Service(), OnPreparedListener, MediaPlayer.OnErrorListener, OnCompletionListener {
 
     private val musicBind = MusicBinder()
     private val gson: Gson = Gson()
@@ -74,10 +71,7 @@ class MusicService : Service(),
 
         player.setWakeMode(applicationContext, PowerManager.PARTIAL_WAKE_LOCK)
         player.setAudioAttributes(
-            AudioAttributes.Builder()
-                .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
-                .setUsage(AudioAttributes.USAGE_MEDIA)
-                .build()
+            AudioAttributes.Builder().setContentType(AudioAttributes.CONTENT_TYPE_MUSIC).setUsage(AudioAttributes.USAGE_MEDIA).build()
         )
 
         player.setOnPreparedListener(this)
@@ -89,8 +83,7 @@ class MusicService : Service(),
             val song = playList[playOrder[songPos]]
 
             val trackUri = ContentUris.withAppendedId(
-                android.provider.MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
-                song.getAudioId()
+                android.provider.MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, song.getAudioId()
             )
 
             // Set media player data source
@@ -113,8 +106,7 @@ class MusicService : Service(),
         if (playList.size != 0) {
             val song = playList[playOrder[songPos]]
             val trackUri = ContentUris.withAppendedId(
-                android.provider.MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
-                song.getAudioId()
+                android.provider.MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, song.getAudioId()
             )
 
             try {
@@ -173,7 +165,8 @@ class MusicService : Service(),
         if (songPos < (playList.size - 1)) {
             songPos += 1
             setSource(true)
-        } else {
+        }
+        else {
             songPos = 0
             setSource(false)
         }
@@ -274,7 +267,8 @@ class MusicService : Service(),
     fun nextTrack() {
         if (songPos < (playList.size - 1)) {
             songPos += 1
-        } else {
+        }
+        else {
             songPos = 0
         }
 
@@ -328,7 +322,8 @@ class MusicService : Service(),
             temp[0] = songPos
             songPos = 0
             temp
-        } else {
+        }
+        else {
             (0..size).toMutableList()
         }
     }

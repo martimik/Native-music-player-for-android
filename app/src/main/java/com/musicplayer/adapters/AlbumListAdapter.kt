@@ -20,8 +20,7 @@ import com.musicplayer.data.DataManager
 class AlbumListAdapter : RecyclerView.Adapter<AlbumListAdapter.AlbumViewHolder> {
 
     private var mContext: Context
-    private var mData: List<AlbumModel> = DataManager.returnInstance()
-        .getAlbums()
+    private var mData: List<AlbumModel> = DataManager.returnInstance().getAlbums()
 
     constructor(mContext: Context) : super() {
         this.mContext = mContext
@@ -47,8 +46,7 @@ class AlbumListAdapter : RecyclerView.Adapter<AlbumListAdapter.AlbumViewHolder> 
         if (holder.albumCover.drawable == null) {
             holder.albumCover.setImageDrawable(
                 ContextCompat.getDrawable(
-                    mContext,
-                    R.drawable.cover_placeholder
+                    mContext, R.drawable.cover_placeholder
                 )
             )
         }

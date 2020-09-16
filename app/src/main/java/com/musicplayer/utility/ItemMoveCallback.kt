@@ -26,17 +26,14 @@ class ItemMoveCallback : ItemTouchHelper.Callback {
     }
 
     override fun getMovementFlags(
-        recyclerView: RecyclerView,
-        viewHolder: RecyclerView.ViewHolder
+        recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder
     ): Int {
         val dragFlags = ItemTouchHelper.UP or ItemTouchHelper.DOWN
         return makeMovementFlags(dragFlags, 0)
     }
 
     override fun onMove(
-        recyclerView: RecyclerView,
-        viewHolder: RecyclerView.ViewHolder,
-        target: RecyclerView.ViewHolder
+        recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder
     ): Boolean {
         mAdapter.onRowMoved(viewHolder.adapterPosition, target.adapterPosition)
         return true
@@ -45,8 +42,7 @@ class ItemMoveCallback : ItemTouchHelper.Callback {
     override fun onSelectedChanged(viewHolder: RecyclerView.ViewHolder?, actionState: Int) {
 
         if (viewHolder is PlaylistAdapter.SongViewHolder) {
-            val myViewHolder: PlaylistAdapter.SongViewHolder =
-                viewHolder as PlaylistAdapter.SongViewHolder
+            val myViewHolder: PlaylistAdapter.SongViewHolder = viewHolder as PlaylistAdapter.SongViewHolder
             mAdapter.onRowSelected(myViewHolder)
         }
 
@@ -54,13 +50,11 @@ class ItemMoveCallback : ItemTouchHelper.Callback {
     }
 
     override fun clearView(
-        recyclerView: RecyclerView,
-        viewHolder: RecyclerView.ViewHolder
+        recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder
     ) {
         super.clearView(recyclerView, viewHolder)
         if (viewHolder is PlaylistAdapter.SongViewHolder) {
-            val myViewHolder: PlaylistAdapter.SongViewHolder? =
-                viewHolder as PlaylistAdapter.SongViewHolder?
+            val myViewHolder: PlaylistAdapter.SongViewHolder? = viewHolder as PlaylistAdapter.SongViewHolder?
             mAdapter.onRowClear(myViewHolder)
         }
     }

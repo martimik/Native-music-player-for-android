@@ -26,16 +26,13 @@ class AlbumDetailFragment : Fragment {
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
 
         this.v = inflater.inflate(R.layout.recycler_view, container, false)
 
         recyclerView = v.findViewById(R.id.recyclerView)
-        val albumDetailAdapter =
-            AlbumDetailAdapter(mContext, mData.getSongs() as MutableList<AudioModel>)
+        val albumDetailAdapter = AlbumDetailAdapter(mContext, mData.getSongs() as MutableList<AudioModel>)
         recyclerView.adapter = albumDetailAdapter
         return v
     }

@@ -5,10 +5,11 @@ import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
+import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.SeekBar
 import android.widget.TextView
@@ -53,24 +54,31 @@ class PlayerFragment : Fragment {
         val view = v.findViewById<ConstraintLayout>(R.id.activity_player_cl_container)
 
         // Play button onClick-listener
-        view.findViewById<Button>(R.id.activity_player_btn_play).setOnClickListener {
+        view.findViewById<ImageButton>(R.id.activity_player_btn_play).setOnClickListener {
+            Log.i("test btn", "play")
+
+
+            val btn = view.findViewById<ImageButton>(R.id.activity_player_btn_play)
+
             if(musicSrv!!.isPlaying()) {
                 musicSrv!!.pausePlay()
-                it.setBackgroundResource(R.drawable.ic_play_circle_filled)
+                btn.setImageResource(R.drawable.ic_play_circle_filled)
             } else {
                 musicSrv!!.resumePlay()
-                it.setBackgroundResource(R.drawable.ic_pause_circle_filled)
+                btn.setImageResource(R.drawable.ic_pause_circle_filled)
             }
         }
 
         // Next track button onClick-listener
-        view.findViewById<Button>(R.id.activity_player_btn_next).setOnClickListener {
+        view.findViewById<ImageButton>(R.id.activity_player_btn_next).setOnClickListener {
             musicSrv!!.nextTrack()
         }
 
         // Previous track button onClick-listener
-        view.findViewById<Button>(R.id.activity_player_btn_previous).setOnClickListener {
+        view.findViewById<ImageButton>(R.id.activity_player_btn_previous).setOnClickListener {
             musicSrv!!.previousTrack()
+            Log.i("test btn", "prev")
+
         }
 
         // Seek bar listener
@@ -97,50 +105,40 @@ class PlayerFragment : Fragment {
         })
 
         // Shuffle button onClick-listener
-        view.findViewById<Button>(R.id.activity_player_btn_shuffle).setOnClickListener {
+        view.findViewById<ImageButton>(R.id.activity_player_btn_shuffle).setOnClickListener {
 
-            val btn = view.findViewById<Button>(R.id.activity_player_btn_shuffle)
+            Log.i("test btn", "shuffle")
+
+            val btn = view.findViewById<ImageButton>(R.id.activity_player_btn_shuffle)
 
             if(musicSrv!!.isShuffled()) {
-                DrawableCompat.setTint(
-                    DrawableCompat.wrap(btn.background),
-                    ContextCompat.getColor(mContext, R.color.white)
-                )
+                btn.setColorFilter(ContextCompat.getColor(mContext, R.color.white))
             } else {
-                DrawableCompat.setTint(
-                    DrawableCompat.wrap(btn.background),
-                    ContextCompat.getColor(mContext, R.color.green)
-                )
+                btn.setColorFilter(ContextCompat.getColor(mContext, R.color.green))
             }
             musicSrv!!.toggleShuffle()
         }
 
         // Loop button onClick-listener
-        view.findViewById<Button>(R.id.activity_player_btn_loop).setOnClickListener {
+        view.findViewById<ImageButton>(R.id.activity_player_btn_loop).setOnClickListener {
 
-            val btn = view.findViewById<Button>(R.id.activity_player_btn_loop)
+            val btn = view.findViewById<ImageButton>(R.id.activity_player_btn_loop)
 
             if(musicSrv!!.isLooping()){
-                DrawableCompat.setTint(
-                    DrawableCompat.wrap(btn.background),
-                    ContextCompat.getColor(mContext, R.color.white)
-                )
+                btn.setColorFilter(ContextCompat.getColor(mContext, R.color.white))
             } else {
-                DrawableCompat.setTint(
-                    DrawableCompat.wrap(btn.background),
-                    ContextCompat.getColor(mContext, R.color.green)
-                )
+                btn.setColorFilter(ContextCompat.getColor(mContext, R.color.green))
             }
             musicSrv!!.toggleLoop()
         }
 
         // Return button onClick-listener
-        view.findViewById<Button>(R.id.activity_player_btn_return).setOnClickListener {
+        view.findViewById<ImageButton>(R.id.activity_player_btn_return).setOnClickListener {
             activity?.finish()
         }
 
         // Playlist button onClick-listener
-        view.findViewById<Button>(R.id.activity_player_btn_playlist).setOnClickListener {
+        view.findViewById<ImageButton>(R.id.activity_player_btn_playlist).setOnClickListener {
             if(v.findViewById<ConstraintLayout>(R.id.activity_player_cl_container) != null) {
                 if(savedInstanceState == null) {
                     fm.beginTransaction()
@@ -219,13 +217,13 @@ class PlayerFragment : Fragment {
         val view = v.findViewById<ConstraintLayout>(R.id.activity_player_cl_container)
 
         if(musicSrv!!.isPlaying()){
-            v.findViewById<Button>(R.id.activity_player_btn_play).setBackgroundResource(R.drawable.ic_pause_circle_filled)
+            v.findViewById<ImageButton>(R.id.activity_player_btn_play).setImageResource(R.drawable.ic_pause_circle_filled)
         } else {
-            v.findViewById<Button>(R.id.activity_player_btn_play).setBackgroundResource(R.drawable.ic_play_circle_filled)
+            v.findViewById<ImageButton>(R.id.activity_player_btn_play).setImageResource(R.drawable.ic_play_circle_filled)
         }
         if(musicSrv!!.isShuffled()){
             DrawableCompat.setTint(
-                DrawableCompat.wrap(v.findViewById<Button>(R.id.activity_player_btn_shuffle).background),
+                DrawableCompat.wrap(v.findViewById<ImageButton>(R.id.activity_player_btn_shuffle).background),
                 ContextCompat.getColor(mContext, R.color.green)
             )
         }

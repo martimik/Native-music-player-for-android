@@ -2,11 +2,15 @@ package com.musicplayer.adapters
 
 import android.content.Context
 import android.content.Intent
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageButton
 import android.widget.LinearLayout
 import android.widget.TextView
+import android.widget.Toast
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.musicplayer.activities.MainActivity
 import com.musicplayer.activities.PlayerActivity
@@ -38,6 +42,15 @@ class SongListAdapter : RecyclerView.Adapter<SongListAdapter.SongViewHolder> {
         holder.title.text= mData[position].getTitle()
         holder.artist.text = artistNameAndDuration
 
+        holder.addBtn.setOnClickListener {
+            if (mContext is MainActivity) {
+                (mContext as MainActivity).addToPlaylist(mutableListOf<AudioModel>(mData[holder.adapterPosition]))
+                val toast = Toast.makeText(mContext, "Song added to playlist", Toast.LENGTH_SHORT)
+                toast.setGravity(Gravity.TOP, 0, 64)
+                toast.show()
+            }
+        }
+
         holder.songListItem.setOnClickListener {
 
             if (mContext is MainActivity) {
@@ -57,18 +70,20 @@ class SongListAdapter : RecyclerView.Adapter<SongListAdapter.SongViewHolder> {
 
     class SongViewHolder : RecyclerView.ViewHolder {
 
-        var songListItem : LinearLayout
+        var songListItem : ConstraintLayout
         //var albumCover : ImageView
         var title: TextView
         var artist: TextView
+        var addBtn: ImageButton
 
         constructor(itemView : View) : super(itemView){
             super.itemView
 
-            songListItem = itemView.findViewById(R.id.row_song_list)
+            songListItem = itemView.findViewById(R.id.row_song_list_container)
             //albumCover = itemView.findViewById(R.id.songListCoverImageView)
             title = itemView.findViewById(R.id.row_song_list_tv_title)
             artist = itemView.findViewById(R.id.row_song_list_tv_artist)
+            addBtn = itemView.findViewById(R.id.row_song_list_btn_add)
         }
     }
 }

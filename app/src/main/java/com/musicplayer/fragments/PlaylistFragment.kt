@@ -5,7 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
+import android.widget.ImageButton
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -48,7 +48,7 @@ class PlaylistFragment : Fragment, StartDragListener {
         touchHelper = ItemTouchHelper(callback)
         touchHelper.attachToRecyclerView(recyclerView)
 
-        v.findViewById<Button>(R.id.fragment_playlist_btn_back).setOnClickListener{
+        v.findViewById<ImageButton>(R.id.fragment_playlist_btn_back).setOnClickListener{
             fm.popBackStack()
         }
 

@@ -6,10 +6,7 @@ import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.LinearLayout
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 import androidx.recyclerview.widget.RecyclerView
 import com.musicplayer.R
 import com.musicplayer.activities.AlbumDetailActivity
@@ -72,7 +69,7 @@ class AlbumDetailAdapter : RecyclerView.Adapter<AlbumDetailAdapter.SongViewHolde
         var songNumber : TextView
         var songName: TextView
         var duration: TextView
-        var addBtn : Button
+        var addBtn : ImageButton
 
         constructor(itemView : View) : super(itemView){
             super.itemView

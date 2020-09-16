@@ -43,10 +43,11 @@
             android:textSize="14sp" />
     </LinearLayout>
 
-    <Button
+    <ImageButton
         android:id="@+id/row_album_detail_btn_add"
-        android:layout_width="20dp"
-        android:layout_height="20dp"
-        android:layout_marginTop="-10dp"
-        android:background="@drawable/ic_playlist_add" />
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@color/cardview_shadow_end_color"
+        android:padding="16dp"
+        android:src="@drawable/ic_playlist_add" />
 </LinearLayout>

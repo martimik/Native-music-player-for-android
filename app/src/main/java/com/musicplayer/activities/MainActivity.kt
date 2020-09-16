@@ -156,6 +156,10 @@ class MainActivity : AppCompatActivity() {
         musicSrv?.setPlaylist(newPlaylist)
     }
 
+    fun addToPlaylist(tracks: MutableList<AudioModel>) {
+        musicSrv?.addToPlaylist(tracks)
+    }
+
     fun updateSmallPlayer(){
 
         val smallPlayer = findViewById<ConstraintLayout>(R.id.small_player)

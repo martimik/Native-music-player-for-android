@@ -200,6 +200,20 @@ class MusicService : Service(),
 
     fun addToPlaylist(songs: MutableList<AudioModel>) {
         playList = (playList + songs) as MutableList<AudioModel>
+        playOrder.add(playList.size - 1)
+
+        savePlaylist()
+    }
+
+    fun removeFromPlaylist(pos: Int){
+        playList.removeAt(playOrder[pos])
+        playOrder.remove(pos)
+
+        for(i in 0 until playList.size) {
+            if(playOrder[i] > pos) playOrder[i] -= 1
+        }
+
+        savePlaylist()
     }
 
     fun isPlaying(): Boolean {
@@ -217,6 +231,11 @@ class MusicService : Service(),
     fun setSong(newSong: Int) {
         songPos = newSong
         setSource(true)
+    }
+
+    fun selectTrack(adapterPos: Int) {
+        songPos = adapterPos
+        setSource(player.isPlaying)
     }
 
     fun getCurrentTrack(): AudioModel {
@@ -277,6 +296,10 @@ class MusicService : Service(),
         player.seekTo(tPos * 1000)
     }
 
+    fun toggleLoop(){
+        player.isLooping = !player.isLooping
+    }
+
     fun toggleShuffle() {
 
         isShuffled = !isShuffled
@@ -290,8 +313,19 @@ class MusicService : Service(),
 
     }
 
-    fun toggleLoop(){
-        player.isLooping = !player.isLooping
+    private fun setOrder(){
+        val size = playList.size - 1
+        playOrder = if(isShuffled) {
+            val temp = (0..size).toMutableList()
+            temp.removeAt(songPos)
+            temp.shuffle()
+            temp.add(temp[0])
+            temp[0] = songPos
+            songPos = 0
+            temp
+        } else {
+            (0..size).toMutableList()
+        }
     }
 
     fun reorderPlaylist(from: Int, to: Int) {
@@ -320,28 +354,6 @@ class MusicService : Service(),
 
         val intent = Intent("UI_UPDATE")
         this.sendBroadcast(intent)
-
-        savePlaylist()
-    }
-
-    fun removeFromPlaylist(pos: Int){
-        playList.removeAt(pos)
-        playOrder.remove(pos)
-    }
-
-    private fun setOrder(){
-        val size = playList.size - 1
-        playOrder = if(isShuffled) {
-            val temp = (0..size).toMutableList()
-            temp.removeAt(songPos)
-            temp.shuffle()
-            temp.add(temp[0])
-            temp[0] = songPos
-            songPos = 0
-            temp
-        } else {
-            (0..size).toMutableList()
-        }
     }
 
     private fun savePlaylist(){

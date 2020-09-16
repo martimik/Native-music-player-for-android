@@ -59,19 +59,22 @@ class PlaylistAdapter : RecyclerView.Adapter<PlaylistAdapter.SongViewHolder>, It
         holder.title.text = mData[position].getTitle()
         holder.artist.text = artistNameAndDuration
 
-
-        holder.songListItem.setOnClickListener {
-            musicSrv?.setSong(holder.adapterPosition)
-            notifyDataSetChanged()
-        }
-
         if(holder.adapterPosition == musicSrv?.getCurrentSongPos()) {
-            //holder.removeBtn.background = ContextCompat.getDrawable(mContext, R.drawable.ic_play_arrow)
-            holder.removeBtn.visibility = View.INVISIBLE
+            holder.removeBtn.setImageResource(R.drawable.ic_play_arrow)
+            //holder.removeBtn.src = ContextCompat.getDrawable(mContext, R.drawable.ic_play_arrow)
+            //holder.removeBtn.visibility = View.INVISIBLE
+            holder.songListItem.setOnClickListener(null)
         }
         else {
+            holder.removeBtn.setImageResource(R.drawable.ic_clear)
             holder.removeBtn.setOnClickListener {
                 musicSrv?.removeFromPlaylist(holder.adapterPosition)
+                mData.removeAt(holder.adapterPosition)
+                notifyDataSetChanged()
+            }
+
+            holder.songListItem.setOnClickListener {
+                musicSrv?.selectTrack(holder.adapterPosition)
                 notifyDataSetChanged()
             }
         }

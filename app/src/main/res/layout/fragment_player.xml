@@ -10,12 +10,13 @@
     android:background="@drawable/music_player_background"
     android:orientation="vertical">
 
-    <Button
+    <ImageButton
         android:id="@+id/activity_player_btn_return"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:layout_marginTop="12dp"
-        android:background="@drawable/ic_chevron_left"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@color/cardview_shadow_end_color"
+        android:padding="8dp"
+        android:src="@drawable/ic_chevron_left"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -32,13 +33,13 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <Button
+    <ImageButton
         android:id="@+id/activity_player_btn_playlist"
-        android:layout_width="36dp"
-        android:layout_height="36dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginEnd="24dp"
-        android:background="@drawable/ic_playlist_open"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@color/cardview_shadow_end_color"
+        android:padding="16dp"
+        android:src="@drawable/ic_playlist_open"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -134,59 +135,75 @@
             android:textStyle="normal" />
     </LinearLayout>
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/buttonLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
         android:layout_marginEnd="32dp"
         android:layout_marginBottom="48dp"
-        android:gravity="center|top"
         android:orientation="horizontal"
         android:paddingVertical="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
-        <Button
+        <ImageButton
             android:id="@+id/activity_player_btn_shuffle"
-            style="@style/Widget.AppCompat.Button.Borderless"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:layout_marginEnd="50dp"
-            android:background="@drawable/ic_shuffle"
-            android:backgroundTint="#FFFFFF" />
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:backgroundTint="#FFFFFF"
+            android:padding="16dp"
+            android:src="@drawable/ic_shuffle"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-        <Button
+        <ImageButton
             android:id="@+id/activity_player_btn_previous"
-            style="@style/Widget.AppCompat.Button.Borderless"
-            android:layout_width="42dp"
-            android:layout_height="42dp"
-            android:background="@drawable/ic_skip_previous" />
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:padding="8dp"
+            android:src="@drawable/ic_skip_previous"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/activity_player_btn_play"
+            app:layout_constraintTop_toTopOf="parent" />
 
-        <Button
+        <ImageButton
             android:id="@+id/activity_player_btn_play"
-            style="@style/Widget.AppCompat.Button.Borderless"
-            android:layout_width="72dp"
-            android:layout_height="72dp"
-            android:layout_marginHorizontal="12dp"
-            android:background="@drawable/ic_pause_circle_filled" />
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:src="@drawable/ic_play_circle_filled"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-        <Button
+        <ImageButton
             android:id="@+id/activity_player_btn_next"
-            style="@style/Widget.AppCompat.Button.Borderless"
-            android:layout_width="42dp"
-            android:layout_height="42dp"
-            android:background="@drawable/ic_skip_next" />
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:padding="8dp"
+            android:src="@drawable/ic_skip_next"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/activity_player_btn_play"
+            app:layout_constraintTop_toTopOf="parent" />
 
-        <Button
+        <ImageButton
             android:id="@+id/activity_player_btn_loop"
-            style="@style/Widget.AppCompat.Button.Borderless"
-            android:layout_width="26dp"
-            android:layout_height="32dp"
-            android:layout_marginStart="50dp"
-            android:background="@drawable/ic_replay"
-            android:backgroundTint="#FFFFFF" />
-    </LinearLayout>
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:backgroundTint="#FFFFFF"
+            android:padding="16dp"
+            android:src="@drawable/ic_replay"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

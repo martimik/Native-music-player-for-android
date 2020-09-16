@@ -11,9 +11,17 @@ class AudioModel : Serializable {
     private var album: String
     private var artist: String
     private var duration: Long
-    private var trackNumber :String
+    private var trackNumber: String
 
-    constructor(audioID: Long, albumId: Long, name: String, album: String, artist: String, duration: Long , trackNumber: String /*, year: String, numerOftracks: String */){
+    constructor(
+        audioID: Long,
+        albumId: Long,
+        name: String,
+        album: String,
+        artist: String,
+        duration: Long,
+        trackNumber: String /*, year: String, numerOftracks: String */
+    ) {
         this.audioID = audioID
         this.albumID = albumId
         this.title = name
@@ -31,7 +39,7 @@ class AudioModel : Serializable {
         this.audioID = audioID
     }
 
-    fun getAlbumId() : Long {
+    fun getAlbumId(): Long {
         return albumID
     }
 

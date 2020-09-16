@@ -6,7 +6,7 @@ import android.provider.MediaStore
 class DataManager {
 
     companion object {
-        private lateinit var instance : DataManager
+        private lateinit var instance: DataManager
 
         fun returnInstance(): DataManager {
             return instance
@@ -74,7 +74,7 @@ class DataManager {
         groupByArtist()
     }
 
-    private fun groupByAlbum(){
+    private fun groupByAlbum() {
         audioList.groupBy { it.getAlbum() }.forEach {
             it.value.sortedBy { track -> track.getTrackNumber() }
             albumList.add(
@@ -87,7 +87,8 @@ class DataManager {
             )
         }
     }
-    private fun groupByArtist(){
+
+    private fun groupByArtist() {
         artistList = albumList.groupBy { it.getArtist() }
     }
 
@@ -96,12 +97,10 @@ class DataManager {
         return audioList
     }
 
-    // Possibly redundant function // TODO
-    fun getSong(position: Int) : AudioModel {
+    fun getSong(position: Int): AudioModel {
         return audioList[position]
     }
 
-    // Possibly redundant function // TODO
     fun getSongIndex(song: AudioModel): Int {
         return audioList.indexOf(song)
     }
@@ -110,11 +109,11 @@ class DataManager {
         return albumList
     }
 
-    fun getAlbum(position: Int) : AlbumModel {
+    fun getAlbum(position: Int): AlbumModel {
         return albumList[position]
     }
 
-    fun getAlbumIndex(album : AlbumModel): Int{
+    fun getAlbumIndex(album: AlbumModel): Int {
         return albumList.indexOf(album)
     }
 
@@ -127,7 +126,7 @@ class DataManager {
     }
 
     // TODO Implement search function
-    fun search(){
+    fun search() {
 
     }
 }

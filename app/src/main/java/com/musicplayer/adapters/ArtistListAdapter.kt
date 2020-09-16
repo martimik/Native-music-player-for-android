@@ -12,15 +12,15 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
+import com.musicplayer.R
 import com.musicplayer.activities.ArtistDetailActivity
 import com.musicplayer.data.AlbumModel
 import com.musicplayer.data.DataManager
-import com.musicplayer.R
 
 class ArtistListAdapter : RecyclerView.Adapter<ArtistListAdapter.ArtistViewHolder> {
 
-    private var mContext : Context
-    private var mData : Map<String, List<AlbumModel>> = DataManager.returnInstance()
+    private var mContext: Context
+    private var mData: Map<String, List<AlbumModel>> = DataManager.returnInstance()
         .getArtists()
 
     constructor(mContext: Context) : super() {
@@ -39,16 +39,19 @@ class ArtistListAdapter : RecyclerView.Adapter<ArtistListAdapter.ArtistViewHolde
 
         val sArtworkUri: Uri = Uri.parse("content://media/external/audio/albumart")
 
-        for(album in mData.values.elementAt(position)){
+        for (album in mData.values.elementAt(position)) {
             val uri: Uri = ContentUris.withAppendedId(sArtworkUri, album.getAlbumKey())
             holder.artistCover.setImageURI(uri)
-            if(holder.artistCover.drawable != null) break
+            if (holder.artistCover.drawable != null) break
         }
 
-        if(holder.artistCover.drawable == null) {
-            holder.artistCover.setImageDrawable(ContextCompat.getDrawable(mContext,
-                R.drawable.artist_placeholder
-            ))
+        if (holder.artistCover.drawable == null) {
+            holder.artistCover.setImageDrawable(
+                ContextCompat.getDrawable(
+                    mContext,
+                    R.drawable.artist_placeholder
+                )
+            )
         }
 
         holder.artistCover
@@ -68,11 +71,11 @@ class ArtistListAdapter : RecyclerView.Adapter<ArtistListAdapter.ArtistViewHolde
 
     class ArtistViewHolder : RecyclerView.ViewHolder {
 
-        var artistListItem : LinearLayout
-        var artistCover : ImageView
+        var artistListItem: LinearLayout
+        var artistCover: ImageView
         var artistName: TextView
 
-        constructor(itemView : View) : super(itemView){
+        constructor(itemView: View) : super(itemView) {
             super.itemView
 
             artistListItem = itemView.findViewById(R.id.row_artist_list)

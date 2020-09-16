@@ -6,7 +6,10 @@ import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.*
+import android.widget.ImageButton
+import android.widget.LinearLayout
+import android.widget.TextView
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.musicplayer.R
 import com.musicplayer.activities.AlbumDetailActivity
@@ -17,10 +20,10 @@ import java.util.concurrent.TimeUnit
 
 class AlbumDetailAdapter : RecyclerView.Adapter<AlbumDetailAdapter.SongViewHolder> {
 
-    private var mContext : Context
-    private var mData : MutableList<AudioModel>
+    private var mContext: Context
+    private var mData: MutableList<AudioModel>
 
-    constructor(mContext: Context, songList : MutableList<AudioModel>) : super() {
+    constructor(mContext: Context, songList: MutableList<AudioModel>) : super() {
         this.mContext = mContext
         this.mData = songList
     }
@@ -35,7 +38,13 @@ class AlbumDetailAdapter : RecyclerView.Adapter<AlbumDetailAdapter.SongViewHolde
 
         val realPos = position + 1
         val duration = mData[position].getDuration()
-        val artistNameAndDuration = String.format("%02d:%02d", TimeUnit.MILLISECONDS.toMinutes(duration), TimeUnit.MILLISECONDS.toSeconds(duration) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(duration)))
+        val artistNameAndDuration = String.format(
+            "%02d:%02d",
+            TimeUnit.MILLISECONDS.toMinutes(duration),
+            TimeUnit.MILLISECONDS.toSeconds(duration) - TimeUnit.MINUTES.toSeconds(
+                TimeUnit.MILLISECONDS.toMinutes(duration)
+            )
+        )
 
         holder.songNumber.text = realPos.toString()
         holder.songName.text = mData[position].getTitle()
@@ -65,13 +74,13 @@ class AlbumDetailAdapter : RecyclerView.Adapter<AlbumDetailAdapter.SongViewHolde
 
     class SongViewHolder : RecyclerView.ViewHolder {
 
-        var albumListItem : LinearLayout
-        var songNumber : TextView
+        var albumListItem: LinearLayout
+        var songNumber: TextView
         var songName: TextView
         var duration: TextView
-        var addBtn : ImageButton
+        var addBtn: ImageButton
 
-        constructor(itemView : View) : super(itemView){
+        constructor(itemView: View) : super(itemView) {
             super.itemView
 
             albumListItem = itemView.findViewById(R.id.row_album_detail_view)

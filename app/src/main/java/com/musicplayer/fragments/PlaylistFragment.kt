@@ -41,14 +41,15 @@ class PlaylistFragment : Fragment, StartDragListener {
 
         recyclerView = v.findViewById(R.id.fragment_playlist_recyclerview)
         val playlistAdapter = PlaylistAdapter(mContext, musicSrv, this)
-        recyclerView.layoutManager = LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false)
+        recyclerView.layoutManager =
+            LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false)
         recyclerView.adapter = playlistAdapter
 
         val callback: ItemTouchHelper.Callback = ItemMoveCallback(playlistAdapter)
         touchHelper = ItemTouchHelper(callback)
         touchHelper.attachToRecyclerView(recyclerView)
 
-        v.findViewById<ImageButton>(R.id.fragment_playlist_btn_back).setOnClickListener{
+        v.findViewById<ImageButton>(R.id.fragment_playlist_btn_back).setOnClickListener {
             fm.popBackStack()
         }
 
@@ -56,7 +57,7 @@ class PlaylistFragment : Fragment, StartDragListener {
 
     }
 
-    override fun requestDrag(viewHolder: RecyclerView.ViewHolder){
+    override fun requestDrag(viewHolder: RecyclerView.ViewHolder) {
         touchHelper.startDrag(viewHolder)
     }
 }

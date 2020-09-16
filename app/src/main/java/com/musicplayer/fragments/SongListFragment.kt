@@ -8,16 +8,16 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
-import com.musicplayer.*
+import com.musicplayer.R
 import com.musicplayer.adapters.SongListAdapter
 
 class SongListFragment : Fragment {
 
-    private var mContext : Context
-    private lateinit var v : View
-    private lateinit var recyclerView : RecyclerView
+    private var mContext: Context
+    private lateinit var v: View
+    private lateinit var recyclerView: RecyclerView
 
-    constructor(mContext : Context) : super() {
+    constructor(mContext: Context) : super() {
         this.mContext = mContext
     }
 
@@ -30,7 +30,8 @@ class SongListFragment : Fragment {
         this.v = inflater.inflate(R.layout.recycler_view, container, false)
         recyclerView = v.findViewById(R.id.list_recyclerview)
         val songListAdapter = SongListAdapter(mContext)
-        recyclerView.layoutManager = StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL)
+        recyclerView.layoutManager =
+            StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL)
         recyclerView.adapter = songListAdapter
         return v
     }

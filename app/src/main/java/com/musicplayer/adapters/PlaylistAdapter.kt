@@ -4,13 +4,11 @@ import android.annotation.SuppressLint
 import android.content.ContentUris
 import android.content.Context
 import android.net.Uri
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
 import android.view.View.OnTouchListener
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
@@ -19,7 +17,6 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.musicplayer.R
 import com.musicplayer.data.AudioModel
-import com.musicplayer.fragments.PlaylistFragment
 import com.musicplayer.services.MusicService
 import com.musicplayer.utility.ItemMoveCallback
 import com.musicplayer.utility.StartDragListener
@@ -27,15 +24,20 @@ import java.util.*
 import java.util.concurrent.TimeUnit
 
 
-class PlaylistAdapter : RecyclerView.Adapter<PlaylistAdapter.SongViewHolder>, ItemMoveCallback.ItemTouchHelperContract {
+class PlaylistAdapter : RecyclerView.Adapter<PlaylistAdapter.SongViewHolder>,
+    ItemMoveCallback.ItemTouchHelperContract {
 
-    var mContext : Context
+    var mContext: Context
     private var mData = mutableListOf<AudioModel>()
     private var currentSongPos: Int = 0
-    private val musicSrv : MusicService?
+    private val musicSrv: MusicService?
     private val mStartDragListener: StartDragListener
 
-    constructor(mContext: Context, musicService: MusicService?, startDragListener: StartDragListener) : super() {
+    constructor(
+        mContext: Context,
+        musicService: MusicService?,
+        startDragListener: StartDragListener
+    ) : super() {
         this.mContext = mContext
         this.musicSrv = musicService
         this.mStartDragListener = startDragListener
@@ -53,19 +55,21 @@ class PlaylistAdapter : RecyclerView.Adapter<PlaylistAdapter.SongViewHolder>, It
 
         val duration = mData[position].getDuration()
 
-        val artistNameAndDuration = String.format(mData[position].getArtist() + " - %02d:%02d", TimeUnit.MILLISECONDS.toMinutes(duration), TimeUnit.MILLISECONDS.toSeconds(duration) - TimeUnit.MINUTES.toSeconds(
-            TimeUnit.MILLISECONDS.toMinutes(duration)))
+        val artistNameAndDuration = String.format(
+            mData[position].getArtist() + " - %02d:%02d",
+            TimeUnit.MILLISECONDS.toMinutes(duration),
+            TimeUnit.MILLISECONDS.toSeconds(duration) - TimeUnit.MINUTES.toSeconds(
+                TimeUnit.MILLISECONDS.toMinutes(duration)
+            )
+        )
 
         holder.title.text = mData[position].getTitle()
         holder.artist.text = artistNameAndDuration
 
-        if(holder.adapterPosition == musicSrv?.getCurrentSongPos()) {
+        if (holder.adapterPosition == musicSrv?.getCurrentSongPos()) {
             holder.removeBtn.setImageResource(R.drawable.ic_play_arrow)
-            //holder.removeBtn.src = ContextCompat.getDrawable(mContext, R.drawable.ic_play_arrow)
-            //holder.removeBtn.visibility = View.INVISIBLE
             holder.songListItem.setOnClickListener(null)
-        }
-        else {
+        } else {
             holder.removeBtn.setImageResource(R.drawable.ic_clear)
             holder.removeBtn.setOnClickListener {
                 musicSrv?.removeFromPlaylist(holder.adapterPosition)
@@ -93,10 +97,13 @@ class PlaylistAdapter : RecyclerView.Adapter<PlaylistAdapter.SongViewHolder>, It
 
         holder.albumCover.setImageURI(uri)
 
-        if(holder.albumCover.drawable == null) {
+        if (holder.albumCover.drawable == null) {
             holder.albumCover.setImageDrawable(
-                ContextCompat.getDrawable(mContext,
-                    R.drawable.cover_placeholder))
+                ContextCompat.getDrawable(
+                    mContext,
+                    R.drawable.cover_placeholder
+                )
+            )
         }
     }
 
@@ -107,13 +114,13 @@ class PlaylistAdapter : RecyclerView.Adapter<PlaylistAdapter.SongViewHolder>, It
     class SongViewHolder : RecyclerView.ViewHolder {
 
         var songListItem: ConstraintLayout
-        var albumCover : ImageView
+        var albumCover: ImageView
         var title: TextView
         var artist: TextView
         var dragBtn: ImageButton
         var removeBtn: ImageButton
 
-        constructor(itemView : View) : super(itemView){
+        constructor(itemView: View) : super(itemView) {
             super.itemView
 
             songListItem = itemView.findViewById(R.id.row_playlist_container)
@@ -128,18 +135,18 @@ class PlaylistAdapter : RecyclerView.Adapter<PlaylistAdapter.SongViewHolder>, It
     override fun onRowMoved(fromPosition: Int, toPosition: Int) {
         when {
             fromPosition < toPosition -> {
-                for(i in fromPosition until toPosition) {
+                for (i in fromPosition until toPosition) {
                     Collections.swap(mData, i, i + 1)
                 }
             }
             toPosition == 0 -> {
-                for(i in fromPosition downTo 1){
-                    Collections.swap(mData, i, i -1)
+                for (i in fromPosition downTo 1) {
+                    Collections.swap(mData, i, i - 1)
                 }
             }
             else -> {
-                for(i in fromPosition downTo toPosition + 1){
-                    Collections.swap(mData, i, i -1)
+                for (i in fromPosition downTo toPosition + 1) {
+                    Collections.swap(mData, i, i - 1)
                 }
             }
         }
@@ -149,7 +156,12 @@ class PlaylistAdapter : RecyclerView.Adapter<PlaylistAdapter.SongViewHolder>, It
     }
 
     override fun onRowSelected(myViewHolder: SongViewHolder?) {
-        myViewHolder?.itemView?.setBackgroundColor(ContextCompat.getColor(mContext, R.color.colorPrimaryDark))
+        myViewHolder?.itemView?.setBackgroundColor(
+            ContextCompat.getColor(
+                mContext,
+                R.color.colorPrimaryDark
+            )
+        )
     }
 
     override fun onRowClear(myViewHolder: SongViewHolder?) {

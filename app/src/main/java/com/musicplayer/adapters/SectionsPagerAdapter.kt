@@ -4,7 +4,6 @@ import android.content.Context
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
-import com.musicplayer.R
 
 /**
  * A [FragmentPagerAdapter] that returns a fragment corresponding to
@@ -29,7 +28,7 @@ class SectionsPagerAdapter(private val context: Context, fm: FragmentManager) :
         return tabTitles.size
     }
 
-    fun addFragment(fragment: Fragment, title: String){
+    fun addFragment(fragment: Fragment, title: String) {
         fragmentList.add(fragment)
         tabTitles.add(title)
     }

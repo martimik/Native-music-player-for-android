@@ -36,15 +36,31 @@ class MainActivity : AppCompatActivity() {
     private var playIntent: Intent? = null
     private var musicBound = false
 
-    private lateinit var broadCastReceiver : BroadcastReceiver
+    private lateinit var broadCastReceiver: BroadcastReceiver
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
-        if(ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED){
-            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE), 10)
+        if (ContextCompat.checkSelfPermission(
+                this,
+                Manifest.permission.READ_EXTERNAL_STORAGE
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            ActivityCompat.requestPermissions(
+                this,
+                arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE),
+                10
+            )
         }
-        if(ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED){
-            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), 10)
+        if (ContextCompat.checkSelfPermission(
+                this,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            ActivityCompat.requestPermissions(
+                this,
+                arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
+                10
+            )
         }
 
         super.onCreate(null)
@@ -76,7 +92,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         findViewById<Button>(R.id.view_small_player_btn_play).setOnClickListener {
-            if(musicSrv!!.isPlaying()){
+            if (musicSrv!!.isPlaying()) {
                 musicSrv?.pausePlay()
                 it.setBackgroundResource(R.drawable.ic_play_circle_outline)
             } else {
@@ -138,7 +154,7 @@ class MainActivity : AppCompatActivity() {
     // Unbind service on destroy
     override fun onDestroy() {
         super.onDestroy()
-        if(musicBound) {
+        if (musicBound) {
 
             this.unbindService(musicConnection)
             musicBound = false
@@ -148,7 +164,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    fun setSong(songPos : Int){
+    fun setSong(songPos: Int) {
         musicSrv?.setSong(songPos)
     }
 
@@ -160,17 +176,19 @@ class MainActivity : AppCompatActivity() {
         musicSrv?.addToPlaylist(tracks)
     }
 
-    fun updateSmallPlayer(){
+    fun updateSmallPlayer() {
 
         val smallPlayer = findViewById<ConstraintLayout>(R.id.small_player)
 
-        if(musicSrv != null && musicSrv!!.playlistExists()) {
+        if (musicSrv != null && musicSrv!!.playlistExists()) {
 
             val curSong = musicSrv?.getCurrentTrack()
 
             smallPlayer.visibility = View.VISIBLE
-            smallPlayer.findViewById<TextView>(R.id.view_small_player_tv_title).text = curSong?.getTitle()
-            smallPlayer.findViewById<TextView>(R.id.view_small_player_tv_artist).text = curSong?.getArtist()
+            smallPlayer.findViewById<TextView>(R.id.view_small_player_tv_title).text =
+                curSong?.getTitle()
+            smallPlayer.findViewById<TextView>(R.id.view_small_player_tv_artist).text =
+                curSong?.getArtist()
 
             val albumArt = smallPlayer.findViewById<ImageView>(R.id.view_small_player_iv_cover)
 
@@ -179,20 +197,25 @@ class MainActivity : AppCompatActivity() {
 
             albumArt.setImageURI(uri)
 
-            if(albumArt.drawable == null) {
-                albumArt.setImageDrawable(ContextCompat.getDrawable(this,
-                    R.drawable.cover_placeholder
-                ))
+            if (albumArt.drawable == null) {
+                albumArt.setImageDrawable(
+                    ContextCompat.getDrawable(
+                        this,
+                        R.drawable.cover_placeholder
+                    )
+                )
             }
 
-            if(musicSrv!!.isPlaying()){
-                smallPlayer.findViewById<Button>(R.id.view_small_player_btn_play).setBackgroundResource(
-                    R.drawable.ic_pause_circle_outline
-                )
+            if (musicSrv!!.isPlaying()) {
+                smallPlayer.findViewById<Button>(R.id.view_small_player_btn_play)
+                    .setBackgroundResource(
+                        R.drawable.ic_pause_circle_outline
+                    )
             } else {
-                smallPlayer.findViewById<Button>(R.id.view_small_player_btn_play).setBackgroundResource(
-                    R.drawable.ic_play_circle_outline
-                )
+                smallPlayer.findViewById<Button>(R.id.view_small_player_btn_play)
+                    .setBackgroundResource(
+                        R.drawable.ic_play_circle_outline
+                    )
             }
 
         } else {

@@ -29,7 +29,7 @@ class PlayerFragment : Fragment {
     private var handler = Handler(Looper.getMainLooper())
     private val fm: FragmentManager
 
-    private lateinit var broadCastReceiver : BroadcastReceiver
+    private lateinit var broadCastReceiver: BroadcastReceiver
 
     private lateinit var v: View
 
@@ -60,7 +60,7 @@ class PlayerFragment : Fragment {
 
             val btn = view.findViewById<ImageButton>(R.id.activity_player_btn_play)
 
-            if(musicSrv!!.isPlaying()) {
+            if (musicSrv!!.isPlaying()) {
                 musicSrv!!.pausePlay()
                 btn.setImageResource(R.drawable.ic_play_circle_filled)
             } else {
@@ -82,27 +82,34 @@ class PlayerFragment : Fragment {
         }
 
         // Seek bar listener
-        view.findViewById<SeekBar>(R.id.activity_player_sb_progressbar).setOnSeekBarChangeListener(object :
-            SeekBar.OnSeekBarChangeListener {
+        view.findViewById<SeekBar>(R.id.activity_player_sb_progressbar)
+            .setOnSeekBarChangeListener(object :
+                SeekBar.OnSeekBarChangeListener {
 
-            override fun onStopTrackingTouch(seekBar: SeekBar) {
-                val progress = seekBar.progress
-                musicSrv!!.seek(progress)
-                updateProgressBar()
-            }
-
-            override fun onStartTrackingTouch(seekBar: SeekBar) {
-                handler.removeCallbacks(updateSeekBar)
-            }
-
-            override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
-                if(fromUser) {
-                    val currentDuration = (progress * 1000 ).toLong()
-                    view.findViewById<TextView>(R.id.activity_player_tv_progress).text = String.format("%02d:%02d", TimeUnit.MILLISECONDS.toMinutes(currentDuration), TimeUnit.MILLISECONDS.toSeconds(currentDuration) - TimeUnit.MINUTES.toSeconds(
-                        TimeUnit.MILLISECONDS.toMinutes(currentDuration)))
+                override fun onStopTrackingTouch(seekBar: SeekBar) {
+                    val progress = seekBar.progress
+                    musicSrv!!.seek(progress)
+                    updateProgressBar()
                 }
-            }
-        })
+
+                override fun onStartTrackingTouch(seekBar: SeekBar) {
+                    handler.removeCallbacks(updateSeekBar)
+                }
+
+                override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
+                    if (fromUser) {
+                        val currentDuration = (progress * 1000).toLong()
+                        view.findViewById<TextView>(R.id.activity_player_tv_progress).text =
+                            String.format(
+                                "%02d:%02d",
+                                TimeUnit.MILLISECONDS.toMinutes(currentDuration),
+                                TimeUnit.MILLISECONDS.toSeconds(currentDuration) - TimeUnit.MINUTES.toSeconds(
+                                    TimeUnit.MILLISECONDS.toMinutes(currentDuration)
+                                )
+                            )
+                    }
+                }
+            })
 
         // Shuffle button onClick-listener
         view.findViewById<ImageButton>(R.id.activity_player_btn_shuffle).setOnClickListener {
@@ -111,7 +118,7 @@ class PlayerFragment : Fragment {
 
             val btn = view.findViewById<ImageButton>(R.id.activity_player_btn_shuffle)
 
-            if(musicSrv!!.isShuffled()) {
+            if (musicSrv!!.isShuffled()) {
                 btn.setColorFilter(ContextCompat.getColor(mContext, R.color.white))
             } else {
                 btn.setColorFilter(ContextCompat.getColor(mContext, R.color.green))
@@ -124,7 +131,7 @@ class PlayerFragment : Fragment {
 
             val btn = view.findViewById<ImageButton>(R.id.activity_player_btn_loop)
 
-            if(musicSrv!!.isLooping()){
+            if (musicSrv!!.isLooping()) {
                 btn.setColorFilter(ContextCompat.getColor(mContext, R.color.white))
             } else {
                 btn.setColorFilter(ContextCompat.getColor(mContext, R.color.green))
@@ -139,10 +146,13 @@ class PlayerFragment : Fragment {
 
         // Playlist button onClick-listener
         view.findViewById<ImageButton>(R.id.activity_player_btn_playlist).setOnClickListener {
-            if(v.findViewById<ConstraintLayout>(R.id.activity_player_cl_container) != null) {
-                if(savedInstanceState == null) {
+            if (v.findViewById<ConstraintLayout>(R.id.activity_player_cl_container) != null) {
+                if (savedInstanceState == null) {
                     fm.beginTransaction()
-                        .replace(R.id.activity_player_container, PlaylistFragment(mContext, musicSrv, fm))
+                        .replace(
+                            R.id.activity_player_container,
+                            PlaylistFragment(mContext, musicSrv, fm)
+                        )
                         .addToBackStack(null)
                         .commit()
                 }
@@ -152,7 +162,7 @@ class PlayerFragment : Fragment {
         return v
     }
 
-    override fun onStart(){
+    override fun onStart() {
         super.onStart()
         updateUI()
     }
@@ -188,9 +198,16 @@ class PlayerFragment : Fragment {
 
             val view = v.findViewById<ConstraintLayout>(R.id.activity_player_cl_container)
 
-            view.findViewById<TextView>(R.id.activity_player_tv_progress).text = String.format("%02d:%02d", TimeUnit.MILLISECONDS.toMinutes(currentDuration), TimeUnit.MILLISECONDS.toSeconds(currentDuration) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(currentDuration)))
+            view.findViewById<TextView>(R.id.activity_player_tv_progress).text = String.format(
+                "%02d:%02d",
+                TimeUnit.MILLISECONDS.toMinutes(currentDuration),
+                TimeUnit.MILLISECONDS.toSeconds(currentDuration) - TimeUnit.MINUTES.toSeconds(
+                    TimeUnit.MILLISECONDS.toMinutes(currentDuration)
+                )
+            )
 
-            view.findViewById<SeekBar>(R.id.activity_player_sb_progressbar).progress = (currentDuration / 1000).toInt()
+            view.findViewById<SeekBar>(R.id.activity_player_sb_progressbar).progress =
+                (currentDuration / 1000).toInt()
 
             // Run this thread again after 1 second
             handler.postDelayed(this, 100)
@@ -216,12 +233,14 @@ class PlayerFragment : Fragment {
 
         val view = v.findViewById<ConstraintLayout>(R.id.activity_player_cl_container)
 
-        if(musicSrv!!.isPlaying()){
-            v.findViewById<ImageButton>(R.id.activity_player_btn_play).setImageResource(R.drawable.ic_pause_circle_filled)
+        if (musicSrv!!.isPlaying()) {
+            v.findViewById<ImageButton>(R.id.activity_player_btn_play)
+                .setImageResource(R.drawable.ic_pause_circle_filled)
         } else {
-            v.findViewById<ImageButton>(R.id.activity_player_btn_play).setImageResource(R.drawable.ic_play_circle_filled)
+            v.findViewById<ImageButton>(R.id.activity_player_btn_play)
+                .setImageResource(R.drawable.ic_play_circle_filled)
         }
-        if(musicSrv!!.isShuffled()){
+        if (musicSrv!!.isShuffled()) {
             DrawableCompat.setTint(
                 DrawableCompat.wrap(v.findViewById<ImageButton>(R.id.activity_player_btn_shuffle).background),
                 ContextCompat.getColor(mContext, R.color.green)
@@ -233,8 +252,15 @@ class PlayerFragment : Fragment {
 
         val duration = currentSong.getDuration()
 
-        view.findViewById<SeekBar>(R.id.activity_player_sb_progressbar).max = (duration / 1000).toInt()
-        view.findViewById<TextView>(R.id.activity_player_tv_duration).text = String.format("%02d:%02d", TimeUnit.MILLISECONDS.toMinutes(duration), TimeUnit.MILLISECONDS.toSeconds(duration) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(duration)))
+        view.findViewById<SeekBar>(R.id.activity_player_sb_progressbar).max =
+            (duration / 1000).toInt()
+        view.findViewById<TextView>(R.id.activity_player_tv_duration).text = String.format(
+            "%02d:%02d",
+            TimeUnit.MILLISECONDS.toMinutes(duration),
+            TimeUnit.MILLISECONDS.toSeconds(duration) - TimeUnit.MINUTES.toSeconds(
+                TimeUnit.MILLISECONDS.toMinutes(duration)
+            )
+        )
 
         val albumArt = view.findViewById<ImageView>(R.id.activity_player_iv_cover)
 

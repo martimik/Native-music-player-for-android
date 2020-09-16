@@ -8,7 +8,6 @@ import android.os.IBinder
 import android.view.View
 import android.widget.Button
 import android.widget.ImageView
-import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -28,7 +27,7 @@ class ArtistDetailActivity : AppCompatActivity() {
     private var playIntent: Intent? = null
     private var musicBound = false
 
-    private lateinit var broadCastReceiver : BroadcastReceiver
+    private lateinit var broadCastReceiver: BroadcastReceiver
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -48,16 +47,19 @@ class ArtistDetailActivity : AppCompatActivity() {
 
         val sArtworkUri: Uri = Uri.parse("content://media/external/audio/albumart")
 
-        for(album in mData!!){
+        for (album in mData!!) {
             val uri: Uri = ContentUris.withAppendedId(sArtworkUri, album.getAlbumKey())
             artistArt.setImageURI(uri)
-            if(artistArt.drawable != null) break
+            if (artistArt.drawable != null) break
         }
 
-        if(artistArt.drawable == null) {
-            artistArt.setImageDrawable(ContextCompat.getDrawable(this,
-                R.drawable.artist_placeholder
-            ))
+        if (artistArt.drawable == null) {
+            artistArt.setImageDrawable(
+                ContextCompat.getDrawable(
+                    this,
+                    R.drawable.artist_placeholder
+                )
+            )
         }
 
         findViewById<ConstraintLayout>(R.id.small_player).setOnClickListener {
@@ -66,7 +68,7 @@ class ArtistDetailActivity : AppCompatActivity() {
         }
 
         findViewById<Button>(R.id.view_small_player_btn_play).setOnClickListener {
-            if(musicSrv!!.isPlaying()){
+            if (musicSrv!!.isPlaying()) {
                 musicSrv?.pausePlay()
                 it.setBackgroundResource(R.drawable.ic_play_circle_outline)
             } else {
@@ -75,17 +77,28 @@ class ArtistDetailActivity : AppCompatActivity() {
             }
         }
 
-        view.findViewById<CollapsingToolbarLayout>(R.id.collapsing_toolbar).setCollapsedTitleTextColor(
-            ColorStateList.valueOf(ContextCompat.getColor(this,
-                R.color.white
-            )))
-        view.findViewById<CollapsingToolbarLayout>(R.id.collapsing_toolbar).setExpandedTitleTextColor(
-            ColorStateList.valueOf(ContextCompat.getColor(this,
-                R.color.white
-            )))
+        view.findViewById<CollapsingToolbarLayout>(R.id.collapsing_toolbar)
+            .setCollapsedTitleTextColor(
+                ColorStateList.valueOf(
+                    ContextCompat.getColor(
+                        this,
+                        R.color.white
+                    )
+                )
+            )
+        view.findViewById<CollapsingToolbarLayout>(R.id.collapsing_toolbar)
+            .setExpandedTitleTextColor(
+                ColorStateList.valueOf(
+                    ContextCompat.getColor(
+                        this,
+                        R.color.white
+                    )
+                )
+            )
 
         val recyclerView = findViewById<RecyclerView>(R.id.recyclerView)
-        recyclerView.layoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
+        recyclerView.layoutManager =
+            StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
         recyclerView.adapter = ArtistDetailAdapter(this, mData)
 
     }
@@ -125,7 +138,7 @@ class ArtistDetailActivity : AppCompatActivity() {
     // Unbind service on destroy
     override fun onDestroy() {
         super.onDestroy()
-        if(musicBound) {
+        if (musicBound) {
             this.unbindService(musicConnection)
             musicBound = false
         }
@@ -133,17 +146,19 @@ class ArtistDetailActivity : AppCompatActivity() {
         unregisterReceiver(broadCastReceiver)
     }
 
-    private fun updateSmallPlayer(){
+    private fun updateSmallPlayer() {
 
         val smallPlayer = findViewById<ConstraintLayout>(R.id.small_player)
 
-        if(musicSrv != null && musicSrv!!.playlistExists()) {
+        if (musicSrv != null && musicSrv!!.playlistExists()) {
 
             val curSong = musicSrv?.getCurrentTrack()
 
             smallPlayer.visibility = View.VISIBLE
-            smallPlayer.findViewById<TextView>(R.id.view_small_player_tv_title).text = curSong?.getTitle()
-            smallPlayer.findViewById<TextView>(R.id.view_small_player_tv_artist).text = curSong?.getArtist()
+            smallPlayer.findViewById<TextView>(R.id.view_small_player_tv_title).text =
+                curSong?.getTitle()
+            smallPlayer.findViewById<TextView>(R.id.view_small_player_tv_artist).text =
+                curSong?.getArtist()
 
             val albumArt = smallPlayer.findViewById<ImageView>(R.id.view_small_player_iv_cover)
 
@@ -152,20 +167,25 @@ class ArtistDetailActivity : AppCompatActivity() {
 
             albumArt.setImageURI(uri)
 
-            if(albumArt.drawable == null) {
-                albumArt.setImageDrawable(ContextCompat.getDrawable(this,
-                    R.drawable.cover_placeholder
-                ))
+            if (albumArt.drawable == null) {
+                albumArt.setImageDrawable(
+                    ContextCompat.getDrawable(
+                        this,
+                        R.drawable.cover_placeholder
+                    )
+                )
             }
 
-            if(musicSrv!!.isPlaying()){
-                smallPlayer.findViewById<Button>(R.id.view_small_player_btn_play).setBackgroundResource(
-                    R.drawable.ic_pause_circle_outline
-                )
+            if (musicSrv!!.isPlaying()) {
+                smallPlayer.findViewById<Button>(R.id.view_small_player_btn_play)
+                    .setBackgroundResource(
+                        R.drawable.ic_pause_circle_outline
+                    )
             } else {
-                smallPlayer.findViewById<Button>(R.id.view_small_player_btn_play).setBackgroundResource(
-                    R.drawable.ic_play_circle_outline
-                )
+                smallPlayer.findViewById<Button>(R.id.view_small_player_btn_play)
+                    .setBackgroundResource(
+                        R.drawable.ic_play_circle_outline
+                    )
             }
 
         } else {

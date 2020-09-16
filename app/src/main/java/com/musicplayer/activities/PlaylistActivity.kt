@@ -13,5 +13,4 @@ class PlaylistActivity : AppCompatActivity() {
     }
 
 
-
 }

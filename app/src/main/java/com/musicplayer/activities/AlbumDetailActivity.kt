@@ -8,7 +8,6 @@ import android.os.IBinder
 import android.view.View
 import android.widget.Button
 import android.widget.ImageView
-import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -19,8 +18,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.appbar.CollapsingToolbarLayout
 import com.musicplayer.R
 import com.musicplayer.adapters.AlbumDetailAdapter
-import com.musicplayer.data.DataManager
 import com.musicplayer.data.AudioModel
+import com.musicplayer.data.DataManager
 import com.musicplayer.services.MusicService
 
 
@@ -30,7 +29,7 @@ class AlbumDetailActivity : AppCompatActivity() {
     private var playIntent: Intent? = null
     private var musicBound = false
 
-    private lateinit var broadCastReceiver : BroadcastReceiver
+    private lateinit var broadCastReceiver: BroadcastReceiver
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -56,11 +55,14 @@ class AlbumDetailActivity : AppCompatActivity() {
 
         albumArt.setImageURI(uri)
 
-        if(albumArt.drawable == null) {
-            albumArt.setImageDrawable(ContextCompat.getDrawable(this,
-                //R.drawable.cover_placeholder
-                R.drawable.ic_music_icon
-            ))
+        if (albumArt.drawable == null) {
+            albumArt.setImageDrawable(
+                ContextCompat.getDrawable(
+                    this,
+                    //R.drawable.cover_placeholder
+                    R.drawable.ic_music_icon
+                )
+            )
         }
 
         findViewById<ConstraintLayout>(R.id.small_player).setOnClickListener {
@@ -69,7 +71,7 @@ class AlbumDetailActivity : AppCompatActivity() {
         }
 
         findViewById<Button>(R.id.view_small_player_btn_play).setOnClickListener {
-            if(musicSrv!!.isPlaying()){
+            if (musicSrv!!.isPlaying()) {
                 musicSrv?.pausePlay()
                 it.setBackgroundResource(R.drawable.ic_play_circle_outline)
             } else {
@@ -78,8 +80,8 @@ class AlbumDetailActivity : AppCompatActivity() {
             }
         }
 
-        view.findViewById<CollapsingToolbarLayout>(R.id.collapsing_toolbar).setCollapsedTitleTextColor(ColorStateList.valueOf(ContextCompat.getColor(this, R.color.white )))
-        view.findViewById<CollapsingToolbarLayout>(R.id.collapsing_toolbar).setExpandedTitleTextColor(ColorStateList.valueOf(ContextCompat.getColor(this, R.color.white )))
+        view.findViewById<CollapsingToolbarLayout>(R.id.collapsing_toolbar).setCollapsedTitleTextColor(ColorStateList.valueOf(ContextCompat.getColor(this, R.color.white)))
+        view.findViewById<CollapsingToolbarLayout>(R.id.collapsing_toolbar).setExpandedTitleTextColor(ColorStateList.valueOf(ContextCompat.getColor(this, R.color.white)))
 
         val recyclerView = findViewById<RecyclerView>(R.id.recyclerView)
         recyclerView.setHasFixedSize(true)
@@ -98,6 +100,7 @@ class AlbumDetailActivity : AppCompatActivity() {
 
             updateSmallPlayer()
         }
+
         override fun onServiceDisconnected(name: ComponentName) {
             musicBound = false
         }
@@ -122,7 +125,7 @@ class AlbumDetailActivity : AppCompatActivity() {
     // Unbind service on destroy
     override fun onDestroy() {
         super.onDestroy()
-        if(musicBound) {
+        if (musicBound) {
             this.unbindService(musicConnection)
             musicBound = false
         }
@@ -131,7 +134,7 @@ class AlbumDetailActivity : AppCompatActivity() {
 
     }
 
-    fun setSong(songPos : Int){
+    fun setSong(songPos: Int) {
         musicSrv?.setSong(songPos)
     }
 
@@ -139,15 +142,15 @@ class AlbumDetailActivity : AppCompatActivity() {
         musicSrv?.setPlaylist(newPlaylist)
     }
 
-    fun addToPlaylist(songs : MutableList<AudioModel>) {
+    fun addToPlaylist(songs: MutableList<AudioModel>) {
         musicSrv!!.addToPlaylist(songs)
     }
 
-    private fun updateSmallPlayer(){
+    private fun updateSmallPlayer() {
 
         val smallPlayer = findViewById<ConstraintLayout>(R.id.small_player)
 
-        if(musicSrv != null && musicSrv!!.playlistExists()) {
+        if (musicSrv != null && musicSrv!!.playlistExists()) {
 
             val curSong = musicSrv?.getCurrentTrack()
 
@@ -162,13 +165,16 @@ class AlbumDetailActivity : AppCompatActivity() {
 
             albumArt.setImageURI(uri)
 
-            if(albumArt.drawable == null) {
-                albumArt.setImageDrawable(ContextCompat.getDrawable(this,
-                    R.drawable.cover_placeholder
-                ))
+            if (albumArt.drawable == null) {
+                albumArt.setImageDrawable(
+                    ContextCompat.getDrawable(
+                        this,
+                        R.drawable.cover_placeholder
+                    )
+                )
             }
 
-            if(musicSrv!!.isPlaying()){
+            if (musicSrv!!.isPlaying()) {
                 smallPlayer.findViewById<Button>(R.id.view_small_player_btn_play).setBackgroundResource(
                     R.drawable.ic_pause_circle_outline
                 )

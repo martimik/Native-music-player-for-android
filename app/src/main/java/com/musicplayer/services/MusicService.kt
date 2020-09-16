@@ -13,10 +13,12 @@ import android.os.Binder
 import android.os.IBinder
 import android.os.PowerManager
 import android.util.Log
+
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import com.musicplayer.data.AlbumModel
+
 import com.musicplayer.data.AudioModel
+
 import java.lang.reflect.Type
 import java.util.*
 
@@ -72,7 +74,10 @@ class MusicService : Service(),
 
         player.setWakeMode(applicationContext, PowerManager.PARTIAL_WAKE_LOCK)
         player.setAudioAttributes(
-            AudioAttributes.Builder().setContentType(AudioAttributes.CONTENT_TYPE_MUSIC).build()
+            AudioAttributes.Builder()
+                .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+                .setUsage(AudioAttributes.USAGE_MEDIA)
+                .build()
         )
 
         player.setOnPreparedListener(this)
@@ -205,12 +210,12 @@ class MusicService : Service(),
         savePlaylist()
     }
 
-    fun removeFromPlaylist(pos: Int){
+    fun removeFromPlaylist(pos: Int) {
         playList.removeAt(playOrder[pos])
         playOrder.remove(pos)
 
-        for(i in 0 until playList.size) {
-            if(playOrder[i] > pos) playOrder[i] -= 1
+        for (i in 0 until playList.size) {
+            if (playOrder[i] > pos) playOrder[i] -= 1
         }
 
         savePlaylist()
@@ -296,7 +301,7 @@ class MusicService : Service(),
         player.seekTo(tPos * 1000)
     }
 
-    fun toggleLoop(){
+    fun toggleLoop() {
         player.isLooping = !player.isLooping
     }
 
@@ -304,7 +309,7 @@ class MusicService : Service(),
 
         isShuffled = !isShuffled
 
-        if(!isShuffled) songPos = playOrder[songPos]
+        if (!isShuffled) songPos = playOrder[songPos]
         setOrder()
 
         editor = sharedPreferences.edit()
@@ -313,9 +318,9 @@ class MusicService : Service(),
 
     }
 
-    private fun setOrder(){
+    private fun setOrder() {
         val size = playList.size - 1
-        playOrder = if(isShuffled) {
+        playOrder = if (isShuffled) {
             val temp = (0..size).toMutableList()
             temp.removeAt(songPos)
             temp.shuffle()
@@ -334,18 +339,18 @@ class MusicService : Service(),
 
         when {
             from < to -> {
-                for(i in from until to) {
+                for (i in from until to) {
                     Collections.swap(playOrder, i, i + 1)
                 }
             }
             to == 0 -> {
-                for(i in from downTo 1){
+                for (i in from downTo 1) {
                     Collections.swap(playOrder, i, i - 1)
                 }
             }
             else -> {
-                for(i in from downTo to + 1){
-                    Collections.swap(playOrder, i, i -1)
+                for (i in from downTo to + 1) {
+                    Collections.swap(playOrder, i, i - 1)
                 }
             }
         }
@@ -356,7 +361,7 @@ class MusicService : Service(),
         this.sendBroadcast(intent)
     }
 
-    private fun savePlaylist(){
+    private fun savePlaylist() {
         val objectString = gson.toJson(playList)
 
         editor = sharedPreferences.edit()

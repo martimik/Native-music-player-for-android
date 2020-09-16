@@ -10,7 +10,7 @@ class AlbumModel : Serializable {
     private var artistName: String
     private var songList: List<AudioModel>
 
-    constructor(albumKey: Long, albumName: String, artist: String, songList: List<AudioModel>){
+    constructor(albumKey: Long, albumName: String, artist: String, songList: List<AudioModel>) {
         this.albumKey = albumKey
         this.albumName = albumName
         this.artistName = artist
@@ -33,7 +33,7 @@ class AlbumModel : Serializable {
         this.artistName = aArtist
     }
 
-    fun getSongs() : List<AudioModel> {
+    fun getSongs(): List<AudioModel> {
         return songList
     }
 

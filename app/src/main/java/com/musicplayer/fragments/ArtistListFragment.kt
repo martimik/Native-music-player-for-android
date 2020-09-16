@@ -8,16 +8,16 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
-import com.musicplayer.adapters.ArtistListAdapter
 import com.musicplayer.R
+import com.musicplayer.adapters.ArtistListAdapter
 
 class ArtistListFragment : Fragment {
 
-    private var mContext : Context
-    private lateinit var v : View
-    private lateinit var recyclerView : RecyclerView
+    private var mContext: Context
+    private lateinit var v: View
+    private lateinit var recyclerView: RecyclerView
 
-    constructor(mContext : Context) : super() {
+    constructor(mContext: Context) : super() {
         this.mContext = mContext
     }
 
@@ -32,7 +32,8 @@ class ArtistListFragment : Fragment {
         recyclerView.setHasFixedSize(true)
         recyclerView.setItemViewCacheSize(20)
         val artistListAdapter = ArtistListAdapter(mContext)
-        recyclerView.layoutManager = StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL)
+        recyclerView.layoutManager =
+            StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL)
         recyclerView.adapter = artistListAdapter
         return v
     }

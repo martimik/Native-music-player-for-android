@@ -3,10 +3,7 @@ package com.musicplayer.adapters
 import android.content.ContentUris
 import android.content.Context
 import android.content.Intent
-import android.graphics.drawable.Drawable
-import android.media.Image
 import android.net.Uri
-import android.os.AsyncTask
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,16 +12,15 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
-import com.musicplayer.activities.AlbumDetailActivity
 import com.musicplayer.R
+import com.musicplayer.activities.AlbumDetailActivity
 import com.musicplayer.data.AlbumModel
 import com.musicplayer.data.DataManager
-import java.lang.Exception
 
 class AlbumListAdapter : RecyclerView.Adapter<AlbumListAdapter.AlbumViewHolder> {
 
-    private var mContext : Context
-    private var mData : List<AlbumModel> = DataManager.returnInstance()
+    private var mContext: Context
+    private var mData: List<AlbumModel> = DataManager.returnInstance()
         .getAlbums()
 
     constructor(mContext: Context) : super() {
@@ -39,7 +35,7 @@ class AlbumListAdapter : RecyclerView.Adapter<AlbumListAdapter.AlbumViewHolder> 
 
     override fun onBindViewHolder(holder: AlbumViewHolder, position: Int) {
 
-        holder.albumName.text= mData[position].getAlbumName()
+        holder.albumName.text = mData[position].getAlbumName()
         holder.artistName.text = mData[position].getArtist()
 
 
@@ -48,13 +44,14 @@ class AlbumListAdapter : RecyclerView.Adapter<AlbumListAdapter.AlbumViewHolder> 
 
         holder.albumCover.setImageURI(uri)
 
-        if(holder.albumCover.drawable == null) {
-            holder.albumCover.setImageDrawable(ContextCompat.getDrawable(mContext,
-                R.drawable.cover_placeholder
-            ))
+        if (holder.albumCover.drawable == null) {
+            holder.albumCover.setImageDrawable(
+                ContextCompat.getDrawable(
+                    mContext,
+                    R.drawable.cover_placeholder
+                )
+            )
         }
-
-        //ImageLoader(holder.albumCover, mContext).execute(mData[position].getAlbumKey())
 
         holder.albumListItem.setOnClickListener {
 
@@ -72,12 +69,12 @@ class AlbumListAdapter : RecyclerView.Adapter<AlbumListAdapter.AlbumViewHolder> 
 
     class AlbumViewHolder : RecyclerView.ViewHolder {
 
-        var albumListItem : LinearLayout
-        var albumCover : ImageView
+        var albumListItem: LinearLayout
+        var albumCover: ImageView
         var albumName: TextView
         var artistName: TextView
 
-        constructor(itemView : View) : super(itemView){
+        constructor(itemView: View) : super(itemView) {
             super.itemView
 
             albumListItem = itemView.findViewById(R.id.item_album_list)
@@ -87,36 +84,3 @@ class AlbumListAdapter : RecyclerView.Adapter<AlbumListAdapter.AlbumViewHolder> 
         }
     }
 }
-
-/*
-class ImageLoader(private val imageView: ImageView, private val mContext: Context) :AsyncTask<Long, Int, Boolean>() {
-
-    private var albumUi: Long = 0
-
-    override fun doInBackground(vararg params: Long?): Boolean? {
-        try {
-            albumUi = params[0]!!
-            return null
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
-        return null
-    }
-
-    override fun onPostExecute(result: Boolean?) {
-        super.onPostExecute(result)
-        val sArtworkUri: Uri = Uri.parse("content://media/external/audio/albumart")
-        val uri: Uri = ContentUris.withAppendedId(sArtworkUri, albumUi)
-
-        imageView.setImageURI(uri)
-
-        if(imageView.drawable == null) {
-            imageView.setImageDrawable(ContextCompat.getDrawable(mContext,
-                R.drawable.cover_placeholder
-            ))
-        }
-    }
-
-}
-
- */

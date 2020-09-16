@@ -7,22 +7,21 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
-import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
+import com.musicplayer.R
 import com.musicplayer.activities.MainActivity
 import com.musicplayer.activities.PlayerActivity
-import com.musicplayer.R
 import com.musicplayer.data.AudioModel
 import com.musicplayer.data.DataManager
 import java.util.concurrent.TimeUnit
 
 class SongListAdapter : RecyclerView.Adapter<SongListAdapter.SongViewHolder> {
 
-    var mContext : Context
-    var mData : MutableList<AudioModel> = DataManager.returnInstance().getAllSongs()
+    var mContext: Context
+    var mData: MutableList<AudioModel> = DataManager.returnInstance().getAllSongs()
 
     constructor(mContext: Context) : super() {
         this.mContext = mContext
@@ -37,9 +36,15 @@ class SongListAdapter : RecyclerView.Adapter<SongListAdapter.SongViewHolder> {
 
         val duration = mData[position].getDuration()
 
-        val artistNameAndDuration = String.format(mData[position].getArtist() + " - %02d:%02d", TimeUnit.MILLISECONDS.toMinutes(duration), TimeUnit.MILLISECONDS.toSeconds(duration) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(duration)))
+        val artistNameAndDuration = String.format(
+            mData[position].getArtist() + " - %02d:%02d",
+            TimeUnit.MILLISECONDS.toMinutes(duration),
+            TimeUnit.MILLISECONDS.toSeconds(duration) - TimeUnit.MINUTES.toSeconds(
+                TimeUnit.MILLISECONDS.toMinutes(duration)
+            )
+        )
 
-        holder.title.text= mData[position].getTitle()
+        holder.title.text = mData[position].getTitle()
         holder.artist.text = artistNameAndDuration
 
         holder.addBtn.setOnClickListener {
@@ -70,13 +75,14 @@ class SongListAdapter : RecyclerView.Adapter<SongListAdapter.SongViewHolder> {
 
     class SongViewHolder : RecyclerView.ViewHolder {
 
-        var songListItem : ConstraintLayout
+        var songListItem: ConstraintLayout
+
         //var albumCover : ImageView
         var title: TextView
         var artist: TextView
         var addBtn: ImageButton
 
-        constructor(itemView : View) : super(itemView){
+        constructor(itemView: View) : super(itemView) {
             super.itemView
 
             songListItem = itemView.findViewById(R.id.row_song_list_container)

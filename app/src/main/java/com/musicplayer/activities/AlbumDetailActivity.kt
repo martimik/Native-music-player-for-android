@@ -39,28 +39,25 @@ class AlbumDetailActivity : AppCompatActivity() {
 
         registerReceiver()
 
-        val albumString = intent.extras?.getInt("albumPosition")
-        val mData = DataManager.returnInstance().getAlbum(albumString!!)
+        val albumString = intent.extras?.getString("albumId")
+        val mData = DataManager().getAlbum(this, albumString!!)
 
         val view = findViewById<CoordinatorLayout>(R.id.albumDetailContainer)
-
-        view.findViewById<CollapsingToolbarLayout>(R.id.collapsing_toolbar).title = mData.getAlbumName()
-        view.findViewById<TextView>(R.id.activity_album_detail_tv_artist).text = mData.getArtist()
-        view.findViewById<TextView>(R.id.activity_album_detail_tv_year).text = String.format("%01d Tracks", mData.getSongs().size)
+        view.findViewById<CollapsingToolbarLayout>(R.id.collapsing_toolbar).title = mData[0].getAlbumName()
+        view.findViewById<TextView>(R.id.activity_album_detail_tv_artist).text = mData[0].getArtistName()
+        view.findViewById<TextView>(R.id.activity_album_detail_tv_year).text = String.format("%01d Tracks", mData.size)
 
         val albumArt = view.findViewById<ImageView>(R.id.app_bar_image)
 
         val sArtworkUri: Uri = Uri.parse("content://media/external/audio/albumart")
-        val uri: Uri = ContentUris.withAppendedId(sArtworkUri, mData.getAlbumKey())
+        val uri: Uri = ContentUris.withAppendedId(sArtworkUri, mData[0].getAlbumId())
 
         albumArt.setImageURI(uri)
 
         if (albumArt.drawable == null) {
             albumArt.setImageDrawable(
                 ContextCompat.getDrawable(
-                    this,
-                    //R.drawable.cover_placeholder
-                    R.drawable.ic_music_icon
+                    this, R.drawable.ic_music_icon
                 )
             )
         }
@@ -87,7 +84,7 @@ class AlbumDetailActivity : AppCompatActivity() {
         val recyclerView = findViewById<RecyclerView>(R.id.recyclerView)
         recyclerView.setHasFixedSize(true)
         recyclerView.layoutManager = LinearLayoutManager(this)
-        recyclerView.adapter = AlbumDetailAdapter(this, mData.getSongs() as MutableList<AudioModel>)
+        recyclerView.adapter = AlbumDetailAdapter(this, mData)
 
     }
 
@@ -139,7 +136,7 @@ class AlbumDetailActivity : AppCompatActivity() {
         musicSrv?.setSong(songPos)
     }
 
-    fun setPlaylist(newPlaylist: MutableList<AudioModel>) {
+    fun setPlaylist(newPlaylist: List<AudioModel>) {
         musicSrv?.setPlaylist(newPlaylist)
     }
 
@@ -157,7 +154,7 @@ class AlbumDetailActivity : AppCompatActivity() {
 
             smallPlayer.visibility = View.VISIBLE
             smallPlayer.findViewById<TextView>(R.id.view_small_player_tv_title).text = curSong?.getTitle()
-            smallPlayer.findViewById<TextView>(R.id.view_small_player_tv_artist).text = curSong?.getArtist()
+            smallPlayer.findViewById<TextView>(R.id.view_small_player_tv_artist).text = curSong?.getArtistName()
 
             val albumArt = smallPlayer.findViewById<ImageView>(R.id.view_small_player_iv_cover)
 

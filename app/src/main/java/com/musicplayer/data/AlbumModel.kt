@@ -1,20 +1,17 @@
 package com.musicplayer.data
 
-import java.io.Serializable
-
-// Probably redundant set functions // TODO
-class AlbumModel : Serializable {
+class AlbumModel {
 
     private var albumKey: Long
     private var albumName: String
     private var artistName: String
-    private var songList: List<AudioModel>
+    private var tracks: List<AudioModel>
 
     constructor(albumKey: Long, albumName: String, artist: String, songList: List<AudioModel>) {
         this.albumKey = albumKey
         this.albumName = albumName
         this.artistName = artist
-        this.songList = songList
+        this.tracks = songList
     }
 
     fun getAlbumName(): String {
@@ -33,15 +30,19 @@ class AlbumModel : Serializable {
         this.artistName = aArtist
     }
 
-    fun getSongs(): List<AudioModel> {
-        return songList
-    }
-
     fun getAlbumKey(): Long {
         return albumKey
     }
 
     fun setAlbumKey(albumKey: Long) {
         this.albumKey = albumKey
+    }
+
+    fun setSongList(songList: List<AudioModel>) {
+        this.tracks = songList
+    }
+
+    fun getSongList(): List<AudioModel> {
+        return tracks
     }
 }

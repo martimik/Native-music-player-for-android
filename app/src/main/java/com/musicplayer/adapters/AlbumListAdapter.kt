@@ -17,14 +17,9 @@ import com.musicplayer.activities.AlbumDetailActivity
 import com.musicplayer.data.AlbumModel
 import com.musicplayer.data.DataManager
 
-class AlbumListAdapter : RecyclerView.Adapter<AlbumListAdapter.AlbumViewHolder> {
+class AlbumListAdapter(private var mContext: Context) : RecyclerView.Adapter<AlbumListAdapter.AlbumViewHolder>() {
 
-    private var mContext: Context
-    private var mData: List<AlbumModel> = DataManager.returnInstance().getAlbums()
-
-    constructor(mContext: Context) : super() {
-        this.mContext = mContext
-    }
+    private var mData: List<AlbumModel> = DataManager().getAlbums(mContext)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AlbumViewHolder {
         val view = LayoutInflater.from(mContext).inflate(R.layout.item_album_list, parent, false)
@@ -52,9 +47,8 @@ class AlbumListAdapter : RecyclerView.Adapter<AlbumListAdapter.AlbumViewHolder> 
         }
 
         holder.albumListItem.setOnClickListener {
-
             val intent = Intent(mContext, AlbumDetailActivity::class.java).apply {
-                putExtra("albumPosition", holder.adapterPosition)
+                putExtra("albumId", mData[position].getAlbumKey())
             }
             mContext.startActivity(intent)
         }

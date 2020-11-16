@@ -112,7 +112,7 @@ class PlayerFragment : Fragment {
 
             val btn = view.findViewById<ImageButton>(R.id.activity_player_btn_shuffle)
 
-            if (musicSrv!!.isShuffled()) {
+            if (musicSrv!!.isShuffleOn()) {
                 btn.setColorFilter(ContextCompat.getColor(mContext, R.color.white))
             }
             else {
@@ -228,14 +228,14 @@ class PlayerFragment : Fragment {
         else {
             v.findViewById<ImageButton>(R.id.activity_player_btn_play).setImageResource(R.drawable.ic_play_circle_filled)
         }
-        if (musicSrv!!.isShuffled()) {
+        if (musicSrv!!.isShuffleOn()) {
             DrawableCompat.setTint(
                 DrawableCompat.wrap(v.findViewById<ImageButton>(R.id.activity_player_btn_shuffle).background), ContextCompat.getColor(mContext, R.color.green)
             )
         }
 
         view.findViewById<TextView>(R.id.activity_player_tv_title).text = currentSong.getTitle()
-        view.findViewById<TextView>(R.id.activity_player_tv_artist).text = currentSong.getArtist()
+        view.findViewById<TextView>(R.id.activity_player_tv_artist).text = currentSong.getArtistName()
 
         val duration = currentSong.getDuration()
 

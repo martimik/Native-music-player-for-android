@@ -15,18 +15,11 @@ import com.musicplayer.R
 import com.musicplayer.activities.AlbumDetailActivity
 import com.musicplayer.activities.PlayerActivity
 import com.musicplayer.data.AudioModel
+import com.musicplayer.data.DataManager
 import java.util.concurrent.TimeUnit
 
 
-class AlbumDetailAdapter : RecyclerView.Adapter<AlbumDetailAdapter.SongViewHolder> {
-
-    private var mContext: Context
-    private var mData: MutableList<AudioModel>
-
-    constructor(mContext: Context, songList: MutableList<AudioModel>) : super() {
-        this.mContext = mContext
-        this.mData = songList
-    }
+class AlbumDetailAdapter(private var mContext: Context, private var mData: List<AudioModel>) : RecyclerView.Adapter<AlbumDetailAdapter.SongViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SongViewHolder {
         val view = LayoutInflater.from(mContext).inflate(R.layout.row_album_detail, parent, false)
@@ -36,7 +29,6 @@ class AlbumDetailAdapter : RecyclerView.Adapter<AlbumDetailAdapter.SongViewHolde
 
     override fun onBindViewHolder(holder: SongViewHolder, position: Int) {
 
-        val realPos = position + 1
         val duration = mData[position].getDuration()
         val artistNameAndDuration = String.format(
             "%02d:%02d", TimeUnit.MILLISECONDS.toMinutes(duration), TimeUnit.MILLISECONDS.toSeconds(duration) - TimeUnit.MINUTES.toSeconds(
@@ -44,7 +36,7 @@ class AlbumDetailAdapter : RecyclerView.Adapter<AlbumDetailAdapter.SongViewHolde
             )
         )
 
-        holder.songNumber.text = realPos.toString()
+        holder.songNumber.text = (position + 1).toString()
         holder.songName.text = mData[position].getTitle()
         holder.duration.text = artistNameAndDuration
 

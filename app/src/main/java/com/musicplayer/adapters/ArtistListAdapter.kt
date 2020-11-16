@@ -15,16 +15,12 @@ import androidx.recyclerview.widget.RecyclerView
 import com.musicplayer.R
 import com.musicplayer.activities.ArtistDetailActivity
 import com.musicplayer.data.AlbumModel
+import com.musicplayer.data.ArtistModel
 import com.musicplayer.data.DataManager
 
-class ArtistListAdapter : RecyclerView.Adapter<ArtistListAdapter.ArtistViewHolder> {
+class ArtistListAdapter(private var mContext: Context) : RecyclerView.Adapter<ArtistListAdapter.ArtistViewHolder>() {
 
-    private var mContext: Context
-    private var mData: Map<String, List<AlbumModel>> = DataManager.returnInstance().getArtists()
-
-    constructor(mContext: Context) : super() {
-        this.mContext = mContext
-    }
+    private var mData: List<ArtistModel> = DataManager().getArtists(mContext)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ArtistViewHolder {
         val view = LayoutInflater.from(mContext).inflate(R.layout.row_artist_list, parent, false)
@@ -34,12 +30,12 @@ class ArtistListAdapter : RecyclerView.Adapter<ArtistListAdapter.ArtistViewHolde
 
     override fun onBindViewHolder(holder: ArtistViewHolder, position: Int) {
 
-        holder.artistName.text = mData.keys.elementAt(position)
+        holder.artistName.text = mData[position].getArtistName()
 
         val sArtworkUri: Uri = Uri.parse("content://media/external/audio/albumart")
 
-        for (album in mData.values.elementAt(position)) {
-            val uri: Uri = ContentUris.withAppendedId(sArtworkUri, album.getAlbumKey())
+        for (album in mData) {
+            val uri: Uri = ContentUris.withAppendedId(sArtworkUri, album.getArtistId())
             holder.artistCover.setImageURI(uri)
             if (holder.artistCover.drawable != null) break
         }
@@ -52,11 +48,9 @@ class ArtistListAdapter : RecyclerView.Adapter<ArtistListAdapter.ArtistViewHolde
             )
         }
 
-        holder.artistCover
-
         holder.artistListItem.setOnClickListener {
             val intent = Intent(mContext, ArtistDetailActivity::class.java).apply {
-                putExtra("artist", mData.keys.elementAt(holder.adapterPosition))
+                putExtra("artistId", mData[holder.adapterPosition].getArtistId())
             }
             mContext.startActivity(intent)
         }

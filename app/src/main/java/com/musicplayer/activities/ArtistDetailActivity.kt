@@ -37,17 +37,17 @@ class ArtistDetailActivity : AppCompatActivity() {
 
         registerReceiver()
 
-        val albumString = intent.extras?.getString("artist")
-        val mData = DataManager.returnInstance().getArtist(albumString!!)
+        val artistId = intent.extras?.getString("artist")
+        val mData = DataManager().getAlbums(this, artistId!!)
 
         val view = findViewById<CoordinatorLayout>(R.id.artistDetailContainer)
 
-        view.findViewById<CollapsingToolbarLayout>(R.id.collapsing_toolbar).title = albumString
+        view.findViewById<CollapsingToolbarLayout>(R.id.collapsing_toolbar).title = artistId
         val artistArt = view.findViewById<ImageView>(R.id.app_bar_image)
 
         val sArtworkUri: Uri = Uri.parse("content://media/external/audio/albumart")
 
-        for (album in mData!!) {
+        for (album in mData) {
             val uri: Uri = ContentUris.withAppendedId(sArtworkUri, album.getAlbumKey())
             artistArt.setImageURI(uri)
             if (artistArt.drawable != null) break
@@ -151,7 +151,7 @@ class ArtistDetailActivity : AppCompatActivity() {
 
             smallPlayer.visibility = View.VISIBLE
             smallPlayer.findViewById<TextView>(R.id.view_small_player_tv_title).text = curSong?.getTitle()
-            smallPlayer.findViewById<TextView>(R.id.view_small_player_tv_artist).text = curSong?.getArtist()
+            smallPlayer.findViewById<TextView>(R.id.view_small_player_tv_artist).text = curSong?.getArtistName()
 
             val albumArt = smallPlayer.findViewById<ImageView>(R.id.view_small_player_iv_cover)
 

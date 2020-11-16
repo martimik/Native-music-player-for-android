@@ -1,40 +1,48 @@
 package com.musicplayer.data
 
-import java.io.Serializable
-
-// Probably redundant set functions // TODO
-class AudioModel : Serializable {
-
-    private var audioID: Long
-    private var albumID: Long
+class AudioModel {
+    private var audioId: Long
+    private var albumId: Long
+    private var artistId: Long
     private var title: String
-    private var album: String
-    private var artist: String
+    private var albumName: String
+    private var artistName: String
     private var duration: Long
     private var trackNumber: String
 
-    constructor(
-        audioID: Long, albumId: Long, name: String, album: String, artist: String, duration: Long, trackNumber: String /*, year: String, numerOftracks: String */
-    ) {
-        this.audioID = audioID
-        this.albumID = albumId
-        this.title = name
-        this.album = album
-        this.artist = artist
+    constructor(audioID: Long, albumId: Long, artistId: Long, title: String, albumName: String, artistName: String, duration: Long, trackNumber: String ) {
+        this.audioId = audioID
+        this.albumId = albumId
+        this.artistId = artistId
+        this.title = title
+        this.albumName = albumName
+        this.artistName = artistName
         this.duration = duration
         this.trackNumber = trackNumber
     }
 
     fun getAudioId(): Long {
-        return audioID
+        return audioId
     }
 
-    fun setPath(audioID: Long) {
-        this.audioID = audioID
+    fun setAudioId(audioID: Long) {
+        this.audioId = audioID
     }
 
     fun getAlbumId(): Long {
-        return albumID
+        return albumId
+    }
+
+    fun setAlbumId(albumId: Long) {
+        this.albumId = albumId
+    }
+
+    fun getArtistId(): Long {
+        return artistId
+    }
+
+    fun setArtistId(artistId: Long) {
+        this.artistId = artistId
     }
 
     fun getTitle(): String {
@@ -45,20 +53,20 @@ class AudioModel : Serializable {
         this.title = title
     }
 
-    fun getAlbum(): String {
-        return album
+    fun getAlbumName(): String {
+        return albumName
     }
 
-    fun setAlbum(album: String) {
-        this.album = album
+    fun setAlbumName(album: String) {
+        this.albumName = album
     }
 
-    fun getArtist(): String {
-        return artist
+    fun getArtistName(): String {
+        return artistName
     }
 
-    fun setArtist(artist: String) {
-        this.artist = artist
+    fun setArtistName(artist: String) {
+        this.artistName = artist
     }
 
     fun getDuration(): Long {

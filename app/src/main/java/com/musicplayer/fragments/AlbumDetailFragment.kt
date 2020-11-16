@@ -13,27 +13,22 @@ import com.musicplayer.data.AlbumModel
 import com.musicplayer.data.AudioModel
 import com.musicplayer.data.DataManager
 
-class AlbumDetailFragment : Fragment {
+class AlbumDetailFragment(private var mContext: Context) : Fragment() {
 
-    private var mContext: Context
-    private var mData: AlbumModel
     private lateinit var v: View
     private lateinit var recyclerView: RecyclerView
 
-    constructor(mContext: Context, position: Int) : super() {
-        this.mContext = mContext
-        this.mData = DataManager.returnInstance().getAlbum(position)
-    }
+    init {
+        fun onCreateView(
+            inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
+        ): View? {
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
-    ): View? {
+            this.v = inflater.inflate(R.layout.recycler_view, container, false)
 
-        this.v = inflater.inflate(R.layout.recycler_view, container, false)
-
-        recyclerView = v.findViewById(R.id.recyclerView)
-        val albumDetailAdapter = AlbumDetailAdapter(mContext, mData.getSongs() as MutableList<AudioModel>)
-        recyclerView.adapter = albumDetailAdapter
-        return v
+            recyclerView = v.findViewById(R.id.recyclerView)
+            val albumDetailAdapter = AlbumDetailAdapter(mContext, )
+            recyclerView.adapter = albumDetailAdapter
+            return v
+        }
     }
 }

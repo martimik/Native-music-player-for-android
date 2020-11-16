@@ -21,7 +21,6 @@ import com.google.android.material.tabs.TabLayout
 import com.musicplayer.R
 import com.musicplayer.adapters.SectionsPagerAdapter
 import com.musicplayer.data.AudioModel
-import com.musicplayer.data.DataManager
 import com.musicplayer.fragments.AlbumListFragment
 import com.musicplayer.fragments.ArtistListFragment
 import com.musicplayer.fragments.SongListFragment
@@ -29,8 +28,6 @@ import com.musicplayer.services.MusicService
 
 
 class MainActivity : AppCompatActivity() {
-
-    private val dataManager = DataManager()
 
     private var musicSrv: MusicService? = null
     private var playIntent: Intent? = null
@@ -53,8 +50,6 @@ class MainActivity : AppCompatActivity() {
         val viewPager: ViewPager = findViewById(R.id.view_pager)
         val tabs: TabLayout = findViewById(R.id.tabs)
         val sectionsPagerAdapter = SectionsPagerAdapter(this, supportFragmentManager)
-
-        dataManager.prepare(this)
 
         registerReceiver()
         createNotificationChannel()
@@ -145,11 +140,11 @@ class MainActivity : AppCompatActivity() {
         musicSrv?.setSong(songPos)
     }
 
-    fun setPlaylist(newPlaylist: MutableList<AudioModel>) {
+    fun setPlaylist(newPlaylist: List<AudioModel>) {
         musicSrv?.setPlaylist(newPlaylist)
     }
 
-    fun addToPlaylist(tracks: MutableList<AudioModel>) {
+    fun addToPlaylist(tracks: List<AudioModel>) {
         musicSrv?.addToPlaylist(tracks)
     }
 
@@ -163,7 +158,7 @@ class MainActivity : AppCompatActivity() {
 
             smallPlayer.visibility = View.VISIBLE
             smallPlayer.findViewById<TextView>(R.id.view_small_player_tv_title).text = curSong?.getTitle()
-            smallPlayer.findViewById<TextView>(R.id.view_small_player_tv_artist).text = curSong?.getArtist()
+            smallPlayer.findViewById<TextView>(R.id.view_small_player_tv_artist).text = curSong?.getArtistName()
 
             val albumArt = smallPlayer.findViewById<ImageView>(R.id.view_small_player_iv_cover)
 

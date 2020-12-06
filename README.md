@@ -16,7 +16,7 @@ V. 1.0
 
 ### Implemented features
 
-- Fetching local media files from phones storage.
+- Fetching local media files from phone storage.
 - Media playback with Music Player.
 - Saving playback state when the app is closed.
 - Seekbar, suffle and repeat in player.

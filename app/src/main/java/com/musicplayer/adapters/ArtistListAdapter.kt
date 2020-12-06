@@ -30,15 +30,11 @@ class ArtistListAdapter(private var mContext: Context) : RecyclerView.Adapter<Ar
 
     override fun onBindViewHolder(holder: ArtistViewHolder, position: Int) {
 
-        holder.artistName.text = mData[position].getArtistName()
+        holder.artistName.text = mData[holder.adapterPosition].getArtistName()
 
         val sArtworkUri: Uri = Uri.parse("content://media/external/audio/albumart")
-
-        for (album in mData) {
-            val uri: Uri = ContentUris.withAppendedId(sArtworkUri, album.getArtistId())
-            holder.artistCover.setImageURI(uri)
-            if (holder.artistCover.drawable != null) break
-        }
+        val uri: Uri = ContentUris.withAppendedId(sArtworkUri, mData[holder.adapterPosition].getAlbumArtId())
+        holder.artistCover.setImageURI(uri)
 
         if (holder.artistCover.drawable == null) {
             holder.artistCover.setImageDrawable(
@@ -50,7 +46,7 @@ class ArtistListAdapter(private var mContext: Context) : RecyclerView.Adapter<Ar
 
         holder.artistListItem.setOnClickListener {
             val intent = Intent(mContext, ArtistDetailActivity::class.java).apply {
-                putExtra("artistId", mData[holder.adapterPosition].getArtistId())
+                putExtra("artist_id", mData[holder.adapterPosition].getArtistId())
             }
             mContext.startActivity(intent)
         }
@@ -60,9 +56,7 @@ class ArtistListAdapter(private var mContext: Context) : RecyclerView.Adapter<Ar
         return mData.size
     }
 
-
     class ArtistViewHolder : RecyclerView.ViewHolder {
-
         var artistListItem: LinearLayout
         var artistCover: ImageView
         var artistName: TextView

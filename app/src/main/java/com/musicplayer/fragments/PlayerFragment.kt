@@ -30,7 +30,6 @@ class PlayerFragment : Fragment {
     private val fm: FragmentManager
 
     private lateinit var broadCastReceiver: BroadcastReceiver
-
     private lateinit var v: View
 
     constructor(mContext: Context, musicService: MusicService?, fm: FragmentManager) : super() {
@@ -48,14 +47,10 @@ class PlayerFragment : Fragment {
     ): View? {
 
         this.v = inflater.inflate(R.layout.fragment_player, container, false)
-
         val view = v.findViewById<ConstraintLayout>(R.id.activity_player_cl_container)
 
         // Play button onClick-listener
         view.findViewById<ImageButton>(R.id.activity_player_btn_play).setOnClickListener {
-            Log.i("test btn", "play")
-
-
             val btn = view.findViewById<ImageButton>(R.id.activity_player_btn_play)
 
             if (musicSrv!!.isPlaying()) {
@@ -76,13 +71,10 @@ class PlayerFragment : Fragment {
         // Previous track button onClick-listener
         view.findViewById<ImageButton>(R.id.activity_player_btn_previous).setOnClickListener {
             musicSrv!!.previousTrack()
-            Log.i("test btn", "prev")
-
         }
 
         // Seek bar listener
         view.findViewById<SeekBar>(R.id.activity_player_sb_progressbar).setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
-
                 override fun onStopTrackingTouch(seekBar: SeekBar) {
                     val progress = seekBar.progress
                     musicSrv!!.seek(progress)
@@ -107,9 +99,6 @@ class PlayerFragment : Fragment {
 
         // Shuffle button onClick-listener
         view.findViewById<ImageButton>(R.id.activity_player_btn_shuffle).setOnClickListener {
-
-            Log.i("test btn", "shuffle")
-
             val btn = view.findViewById<ImageButton>(R.id.activity_player_btn_shuffle)
 
             if (musicSrv!!.isShuffleOn()) {
@@ -123,7 +112,6 @@ class PlayerFragment : Fragment {
 
         // Loop button onClick-listener
         view.findViewById<ImageButton>(R.id.activity_player_btn_loop).setOnClickListener {
-
             val btn = view.findViewById<ImageButton>(R.id.activity_player_btn_loop)
 
             if (musicSrv!!.isLooping()) {
@@ -150,7 +138,6 @@ class PlayerFragment : Fragment {
                 }
             }
         }
-
         return v
     }
 
@@ -185,7 +172,6 @@ class PlayerFragment : Fragment {
     // Thread updating seek bar every second
     private val updateSeekBar: Runnable = object : Runnable {
         override fun run() {
-
             val currentDuration: Long = musicSrv!!.getPosition()
 
             val view = v.findViewById<ConstraintLayout>(R.id.activity_player_cl_container)
@@ -200,15 +186,12 @@ class PlayerFragment : Fragment {
 
             // Run this thread again after 1 second
             handler.postDelayed(this, 100)
-
         }
     }
 
     private fun registerReceiver() {
         broadCastReceiver = object : BroadcastReceiver() {
             override fun onReceive(context: Context?, intent: Intent) {
-                // val otpCode = intent.getStringExtra("UI_UPDATE")
-
                 updateUI()
             }
         }
@@ -217,7 +200,6 @@ class PlayerFragment : Fragment {
 
     // Update player UI
     private fun updateUI() {
-
         val currentSong = musicSrv!!.getCurrentTrack()
 
         val view = v.findViewById<ConstraintLayout>(R.id.activity_player_cl_container)
@@ -245,13 +227,10 @@ class PlayerFragment : Fragment {
                 TimeUnit.MILLISECONDS.toMinutes(duration)
             )
         )
-
         val albumArt = view.findViewById<ImageView>(R.id.activity_player_iv_cover)
 
-        val albumId = currentSong.getAlbumId()
-
         val sArtworkUri: Uri = Uri.parse("content://media/external/audio/albumart")
-        val uri: Uri = ContentUris.withAppendedId(sArtworkUri, albumId)
+        val uri: Uri = ContentUris.withAppendedId(sArtworkUri, currentSong.getAlbumId())
 
         albumArt.setImageURI(uri)
 

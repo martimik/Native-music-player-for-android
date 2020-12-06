@@ -28,6 +28,8 @@
                     android:id="@+id/fragment_playlist_btn_back"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginTop="8dp"
                     android:background="@color/cardview_shadow_end_color"
                     android:padding="8dp"
                     android:src="@drawable/ic_chevron_left" />

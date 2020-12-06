@@ -12,6 +12,7 @@ import android.view.View
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.app.ActivityCompat
@@ -28,17 +29,15 @@ import com.musicplayer.services.MusicService
 
 
 class MainActivity : AppCompatActivity() {
-
-    private var musicSrv: MusicService? = null
-    private var playIntent: Intent? = null
+    private lateinit var musicSrv: MusicService
+    private lateinit var playIntent: Intent
     private var musicBound = false
 
     private lateinit var broadCastReceiver: BroadcastReceiver
 
     override fun onCreate(savedInstanceState: Bundle?) {
-
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE), 10)
+            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE), 1)
         }
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), 10)
@@ -54,7 +53,7 @@ class MainActivity : AppCompatActivity() {
         registerReceiver()
         createNotificationChannel()
 
-        //sectionsPagerAdapter.addFragment(PlaylistFragment(this, musicSrv!!), "Playlists")
+        //sectionsPagerAdapter.addFragment(PlaylistFragment(this, musicSrv), "Playlists")
         sectionsPagerAdapter.addFragment(AlbumListFragment(this), "Albums")
         sectionsPagerAdapter.addFragment(ArtistListFragment(this), "Artists")
         sectionsPagerAdapter.addFragment(SongListFragment(this), "Songs")
@@ -68,12 +67,12 @@ class MainActivity : AppCompatActivity() {
         }
 
         findViewById<Button>(R.id.view_small_player_btn_play).setOnClickListener {
-            if (musicSrv!!.isPlaying()) {
-                musicSrv?.pausePlay()
+            if (musicSrv.isPlaying()) {
+                musicSrv.pausePlay()
                 it.setBackgroundResource(R.drawable.ic_play_circle_outline)
             }
             else {
-                musicSrv?.resumePlay()
+                musicSrv.resumePlay()
                 it.setBackgroundResource(R.drawable.ic_pause_circle_outline)
             }
         }
@@ -95,7 +94,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun createNotificationChannel() {
-
         val name = "Media Player Controls"
         val descriptionText = "Media Player Controls"
         val importance = NotificationManager.IMPORTANCE_DEFAULT
@@ -110,11 +108,9 @@ class MainActivity : AppCompatActivity() {
     // Bind musicService on start
     override fun onStart() {
         super.onStart()
-        if (playIntent == null) {
-            playIntent = Intent(this, MusicService::class.java)
-            this.bindService(playIntent, musicConnection, Context.BIND_AUTO_CREATE)
-            this.startService(playIntent)
-        }
+        playIntent = Intent(this, MusicService::class.java)
+        this.startService(playIntent)
+        this.bindService(playIntent, musicConnection, Context.BIND_AUTO_CREATE)
     }
 
     // Update ui when resuming activity
@@ -127,43 +123,39 @@ class MainActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         if (musicBound) {
-
             this.unbindService(musicConnection)
             musicBound = false
-
             stopService(Intent(this, MusicService::class.java))
-            unregisterReceiver(broadCastReceiver)
         }
+        unregisterReceiver(broadCastReceiver)
     }
 
     fun setSong(songPos: Int) {
-        musicSrv?.setSong(songPos)
+        musicSrv.setSong(songPos)
     }
 
     fun setPlaylist(newPlaylist: List<AudioModel>) {
-        musicSrv?.setPlaylist(newPlaylist)
+        musicSrv.setPlaylist(newPlaylist)
     }
 
     fun addToPlaylist(tracks: List<AudioModel>) {
-        musicSrv?.addToPlaylist(tracks)
+        musicSrv.addToPlaylist(tracks)
     }
 
     fun updateSmallPlayer() {
-
         val smallPlayer = findViewById<ConstraintLayout>(R.id.small_player)
 
-        if (musicSrv != null && musicSrv!!.playlistExists()) {
-
-            val curSong = musicSrv?.getCurrentTrack()
+        if (musicBound && musicSrv.playlistExists()) {
+            val curSong = musicSrv.getCurrentTrack()
 
             smallPlayer.visibility = View.VISIBLE
-            smallPlayer.findViewById<TextView>(R.id.view_small_player_tv_title).text = curSong?.getTitle()
-            smallPlayer.findViewById<TextView>(R.id.view_small_player_tv_artist).text = curSong?.getArtistName()
+            smallPlayer.findViewById<TextView>(R.id.view_small_player_tv_title).text = curSong.getTitle()
+            smallPlayer.findViewById<TextView>(R.id.view_small_player_tv_artist).text = curSong.getArtistName()
 
             val albumArt = smallPlayer.findViewById<ImageView>(R.id.view_small_player_iv_cover)
 
             val sArtworkUri: Uri = Uri.parse("content://media/external/audio/albumart")
-            val uri: Uri = ContentUris.withAppendedId(sArtworkUri, curSong!!.getAlbumId())
+            val uri: Uri = ContentUris.withAppendedId(sArtworkUri, curSong.getAlbumId())
 
             albumArt.setImageURI(uri)
 
@@ -174,8 +166,7 @@ class MainActivity : AppCompatActivity() {
                     )
                 )
             }
-
-            if (musicSrv!!.isPlaying()) {
+            if (musicSrv.isPlaying()) {
                 smallPlayer.findViewById<Button>(R.id.view_small_player_btn_play).setBackgroundResource(
                     R.drawable.ic_pause_circle_outline
                 )
@@ -185,7 +176,6 @@ class MainActivity : AppCompatActivity() {
                     R.drawable.ic_play_circle_outline
                 )
             }
-
         }
         else {
             smallPlayer.visibility = View.GONE
@@ -194,11 +184,28 @@ class MainActivity : AppCompatActivity() {
 
     private fun registerReceiver() {
         broadCastReceiver = object : BroadcastReceiver() {
-            override fun onReceive(context: Context?, intent: Intent) {
+            override fun onReceive(context: Context, intent: Intent) {
                 // val otpCode = intent.getStringExtra("UI_UPDATE")
                 updateSmallPlayer()
             }
         }
         registerReceiver(broadCastReceiver, IntentFilter("UI_UPDATE"))
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        when (requestCode) {
+            1 -> {
+                if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    finish()
+                    overridePendingTransition(0, 0)
+                    startActivity(intent)
+                    overridePendingTransition(0, 0)
+                }
+                else {
+                    Toast.makeText(this@MainActivity, "Permission to read external storage is required to load music files", Toast.LENGTH_LONG).show()
+                }
+            }
+        }
     }
 }

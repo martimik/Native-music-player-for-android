@@ -49,7 +49,6 @@ class PlaylistAdapter : RecyclerView.Adapter<PlaylistAdapter.SongViewHolder>, It
 
     @SuppressLint("ClickableViewAccessibility")
     override fun onBindViewHolder(holder: SongViewHolder, position: Int) {
-
         val duration = mData[position].getDuration()
 
         val artistNameAndDuration = String.format(
@@ -75,6 +74,9 @@ class PlaylistAdapter : RecyclerView.Adapter<PlaylistAdapter.SongViewHolder>, It
 
             holder.songListItem.setOnClickListener {
                 musicSrv?.selectTrack(holder.adapterPosition)
+                if(musicSrv?.isPlaying() == false) {
+                    musicSrv.resumePlay()
+                }
                 notifyDataSetChanged()
             }
         }

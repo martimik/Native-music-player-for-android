@@ -2,13 +2,13 @@ package com.musicplayer.data
 
 class AlbumModel {
 
-    private var albumKey: Long
+    private var albumId: Long
     private var albumName: String
     private var artistName: String
     private var tracks: List<AudioModel>
 
-    constructor(albumKey: Long, albumName: String, artist: String, songList: List<AudioModel>) {
-        this.albumKey = albumKey
+    constructor(albumId: Long, albumName: String, artist: String, songList: List<AudioModel>) {
+        this.albumId = albumId
         this.albumName = albumName
         this.artistName = artist
         this.tracks = songList
@@ -30,12 +30,12 @@ class AlbumModel {
         this.artistName = aArtist
     }
 
-    fun getAlbumKey(): Long {
-        return albumKey
+    fun getAlbumId(): Long {
+        return albumId
     }
 
     fun setAlbumKey(albumKey: Long) {
-        this.albumKey = albumKey
+        this.albumId = albumKey
     }
 
     fun setSongList(songList: List<AudioModel>) {

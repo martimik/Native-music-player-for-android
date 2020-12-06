@@ -51,7 +51,6 @@ class PlaylistFragment : Fragment, StartDragListener {
         }
 
         return v
-
     }
 
     override fun requestDrag(viewHolder: RecyclerView.ViewHolder) {

@@ -8,9 +8,9 @@ class AudioModel {
     private var albumName: String
     private var artistName: String
     private var duration: Long
-    private var trackNumber: String
+    private var trackNumber: Int
 
-    constructor(audioID: Long, albumId: Long, artistId: Long, title: String, albumName: String, artistName: String, duration: Long, trackNumber: String ) {
+    constructor(audioID: Long, albumId: Long, artistId: Long, title: String, albumName: String, artistName: String, duration: Long, trackNumber: Int ) {
         this.audioId = audioID
         this.albumId = albumId
         this.artistId = artistId
@@ -77,11 +77,11 @@ class AudioModel {
         this.duration = duration
     }
 
-    fun getTrackNumber(): String {
+    fun getTrackNumber(): Int {
         return trackNumber
     }
 
-    fun setTrackNumber(trackNumber: String) {
+    fun setTrackNumber(trackNumber: Int) {
         this.trackNumber = trackNumber
     }
 }

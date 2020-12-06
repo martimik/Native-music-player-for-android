@@ -3,11 +3,12 @@ package com.musicplayer.data
 class ArtistModel {
     private var artistId: Long
     private var artistName: String
-    private lateinit var albums: List<String>
+    private var albumArtId: Long
 
-    constructor(artistId: Long, artistName: String) {
+    constructor(artistId: Long, artistName: String, albumArtId: Long) {
         this.artistId = artistId
         this.artistName = artistName
+        this.albumArtId = albumArtId
     }
 
     fun getArtistId(): Long {
@@ -26,13 +27,12 @@ class ArtistModel {
         return artistName
     }
 
-
-    fun getAlbums(): List<String> {
-        return albums
+    fun setAlbumArtId(albumArtId: Long) {
+        this.albumArtId = albumArtId
     }
 
-    fun setAlbums(albums: List<String>) {
-        this.albums = albums
+    fun getAlbumArtId(): Long {
+        return albumArtId
     }
 
 }

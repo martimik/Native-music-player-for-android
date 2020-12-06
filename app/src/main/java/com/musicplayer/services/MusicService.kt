@@ -54,7 +54,7 @@ class MusicService : Service(), OnPreparedListener, MediaPlayer.OnErrorListener,
 
         val listType: Type = object : TypeToken<List<AudioModel?>?>() {}.type
 
-        if (data != null) {
+        if (!data.isNullOrEmpty()) {
             playList = gson.fromJson(data, listType)
         }
 
@@ -98,9 +98,9 @@ class MusicService : Service(), OnPreparedListener, MediaPlayer.OnErrorListener,
         startPlayback = start
 
         if (playList.size != 0) {
-            val song = playList[playOrder[songPos]]
+            val audioModel = playList[playOrder[songPos]]
             val trackUri = ContentUris.withAppendedId(
-                android.provider.MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, song.getAudioId()
+                android.provider.MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, audioModel.getAudioId()
             )
 
             try {
@@ -155,7 +155,6 @@ class MusicService : Service(), OnPreparedListener, MediaPlayer.OnErrorListener,
     }
 
     override fun onCompletion(mp: MediaPlayer?) {
-
         if (songPos < (playList.size - 1)) {
             songPos += 1
             setSource(true)
@@ -171,7 +170,6 @@ class MusicService : Service(), OnPreparedListener, MediaPlayer.OnErrorListener,
     }
 
     fun setPlaylist(newPlaylist: List<AudioModel>) {
-
         playList = newPlaylist as MutableList<AudioModel>
 
         setOrder()
@@ -179,7 +177,6 @@ class MusicService : Service(), OnPreparedListener, MediaPlayer.OnErrorListener,
     }
 
     fun getPlaylist(): MutableList<AudioModel> {
-
         val temp = mutableListOf<AudioModel>()
 
         for (i in 0 until playOrder.size) {
@@ -294,7 +291,6 @@ class MusicService : Service(), OnPreparedListener, MediaPlayer.OnErrorListener,
     }
 
     fun toggleShuffle() {
-
         shuffleOn = !shuffleOn
 
         if (!shuffleOn) songPos = playOrder[songPos]
@@ -323,9 +319,7 @@ class MusicService : Service(), OnPreparedListener, MediaPlayer.OnErrorListener,
     }
 
     fun reorderPlaylist(from: Int, to: Int) {
-
         val curSong = playList[playOrder[songPos]]
-
         when {
             from < to -> {
                 for (i in from until to) {
@@ -345,14 +339,12 @@ class MusicService : Service(), OnPreparedListener, MediaPlayer.OnErrorListener,
         }
 
         songPos = playOrder.indexOf(playList.indexOf(curSong))
-
         val intent = Intent("UI_UPDATE")
         this.sendBroadcast(intent)
     }
 
     private fun savePlaylist() {
         val objectString = gson.toJson(playList)
-
         editor = sharedPreferences.edit()
         editor.putString("cachedPlaylist", objectString)
         editor.apply()

@@ -15,7 +15,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.musicplayer.R
 import com.musicplayer.activities.AlbumDetailActivity
 import com.musicplayer.data.AlbumModel
-import com.musicplayer.data.DataManager
 
 class ArtistDetailAdapter : RecyclerView.Adapter<ArtistDetailAdapter.AlbumViewHolder> {
 
@@ -32,13 +31,11 @@ class ArtistDetailAdapter : RecyclerView.Adapter<ArtistDetailAdapter.AlbumViewHo
         val viewHolder = AlbumViewHolder(view)
 
         viewHolder.albumListItem.setOnClickListener {
-
             val intent = Intent(mContext, AlbumDetailActivity::class.java).apply {
                 putExtra(
-                    "albumPosition", DataManager.returnInstance().getAlbumIndex(mData[viewHolder.adapterPosition])
+                    "album_id", mData[viewHolder.adapterPosition].getAlbumId()
                 )
             }
-
             mContext.startActivity(intent)
         }
 
@@ -51,7 +48,7 @@ class ArtistDetailAdapter : RecyclerView.Adapter<ArtistDetailAdapter.AlbumViewHo
         holder.artistName.text = mData[position].getArtist()
 
         val sArtworkUri: Uri = Uri.parse("content://media/external/audio/albumart")
-        val uri: Uri = ContentUris.withAppendedId(sArtworkUri, mData[position].getAlbumKey())
+        val uri: Uri = ContentUris.withAppendedId(sArtworkUri, mData[position].getAlbumId())
 
         holder.albumCover.setImageURI(uri)
 

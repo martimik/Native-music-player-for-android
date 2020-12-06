@@ -14,13 +14,12 @@ import com.musicplayer.services.MusicService
 
 class PlayerActivity : FragmentActivity() {
 
-    private var musicSrv: MusicService? = null
+    private lateinit var musicSrv: MusicService
     private var musicBound = false
     private val fm: FragmentManager = supportFragmentManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        //supportActionBar!!.hide()
         setContentView(R.layout.activity_player)
 
         bindService()

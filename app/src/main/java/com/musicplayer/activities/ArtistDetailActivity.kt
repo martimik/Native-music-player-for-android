@@ -23,8 +23,8 @@ import com.musicplayer.services.MusicService
 
 class ArtistDetailActivity : AppCompatActivity() {
 
-    private var musicSrv: MusicService? = null
-    private var playIntent: Intent? = null
+    private lateinit var musicSrv: MusicService
+    private lateinit var playIntent: Intent
     private var musicBound = false
 
     private lateinit var broadCastReceiver: BroadcastReceiver
@@ -37,18 +37,18 @@ class ArtistDetailActivity : AppCompatActivity() {
 
         registerReceiver()
 
-        val artistId = intent.extras?.getString("artist")
+        val artistId = intent.extras?.getLong("artist_id")
         val mData = DataManager().getAlbums(this, artistId!!)
 
         val view = findViewById<CoordinatorLayout>(R.id.artistDetailContainer)
 
-        view.findViewById<CollapsingToolbarLayout>(R.id.collapsing_toolbar).title = artistId
+        view.findViewById<CollapsingToolbarLayout>(R.id.collapsing_toolbar).title = mData[0].getArtist()
         val artistArt = view.findViewById<ImageView>(R.id.app_bar_image)
 
         val sArtworkUri: Uri = Uri.parse("content://media/external/audio/albumart")
 
         for (album in mData) {
-            val uri: Uri = ContentUris.withAppendedId(sArtworkUri, album.getAlbumKey())
+            val uri: Uri = ContentUris.withAppendedId(sArtworkUri, album.getAlbumId())
             artistArt.setImageURI(uri)
             if (artistArt.drawable != null) break
         }
@@ -67,12 +67,12 @@ class ArtistDetailActivity : AppCompatActivity() {
         }
 
         findViewById<Button>(R.id.view_small_player_btn_play).setOnClickListener {
-            if (musicSrv!!.isPlaying()) {
-                musicSrv?.pausePlay()
+            if (musicSrv.isPlaying()) {
+                musicSrv.pausePlay()
                 it.setBackgroundResource(R.drawable.ic_play_circle_outline)
             }
             else {
-                musicSrv?.resumePlay()
+                musicSrv.resumePlay()
                 it.setBackgroundResource(R.drawable.ic_pause_circle_outline)
             }
         }
@@ -117,11 +117,8 @@ class ArtistDetailActivity : AppCompatActivity() {
     // Bind musicService on start
     override fun onStart() {
         super.onStart()
-        if (playIntent == null) {
-            playIntent = Intent(this, MusicService::class.java)
-            this.bindService(playIntent, musicConnection, Context.BIND_AUTO_CREATE)
-        }
-        musicBound = true
+        playIntent = Intent(this, MusicService::class.java)
+        this.bindService(playIntent, musicConnection, Context.BIND_AUTO_CREATE)
     }
 
     // Update ui when resuming activity
@@ -145,18 +142,18 @@ class ArtistDetailActivity : AppCompatActivity() {
 
         val smallPlayer = findViewById<ConstraintLayout>(R.id.small_player)
 
-        if (musicSrv != null && musicSrv!!.playlistExists()) {
+        if (musicBound && musicSrv.playlistExists()) {
 
-            val curSong = musicSrv?.getCurrentTrack()
+            val curSong = musicSrv.getCurrentTrack()
 
             smallPlayer.visibility = View.VISIBLE
-            smallPlayer.findViewById<TextView>(R.id.view_small_player_tv_title).text = curSong?.getTitle()
-            smallPlayer.findViewById<TextView>(R.id.view_small_player_tv_artist).text = curSong?.getArtistName()
+            smallPlayer.findViewById<TextView>(R.id.view_small_player_tv_title).text = curSong.getTitle()
+            smallPlayer.findViewById<TextView>(R.id.view_small_player_tv_artist).text = curSong.getArtistName()
 
             val albumArt = smallPlayer.findViewById<ImageView>(R.id.view_small_player_iv_cover)
 
             val sArtworkUri: Uri = Uri.parse("content://media/external/audio/albumart")
-            val uri: Uri = ContentUris.withAppendedId(sArtworkUri, curSong!!.getAlbumId())
+            val uri: Uri = ContentUris.withAppendedId(sArtworkUri, curSong.getAlbumId())
 
             albumArt.setImageURI(uri)
 
@@ -168,7 +165,7 @@ class ArtistDetailActivity : AppCompatActivity() {
                 )
             }
 
-            if (musicSrv!!.isPlaying()) {
+            if (musicSrv.isPlaying()) {
                 smallPlayer.findViewById<Button>(R.id.view_small_player_btn_play).setBackgroundResource(
                         R.drawable.ic_pause_circle_outline
                     )
@@ -188,8 +185,6 @@ class ArtistDetailActivity : AppCompatActivity() {
     private fun registerReceiver() {
         broadCastReceiver = object : BroadcastReceiver() {
             override fun onReceive(context: Context?, intent: Intent) {
-                val otpCode = intent.getStringExtra("UI_UPDATE")
-
                 updateSmallPlayer()
             }
         }

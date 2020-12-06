@@ -28,13 +28,11 @@ class AlbumListAdapter(private var mContext: Context) : RecyclerView.Adapter<Alb
     }
 
     override fun onBindViewHolder(holder: AlbumViewHolder, position: Int) {
-
         holder.albumName.text = mData[position].getAlbumName()
         holder.artistName.text = mData[position].getArtist()
 
-
         val sArtworkUri: Uri = Uri.parse("content://media/external/audio/albumart")
-        val uri: Uri = ContentUris.withAppendedId(sArtworkUri, mData[position].getAlbumKey())
+        val uri: Uri = ContentUris.withAppendedId(sArtworkUri, mData[holder.adapterPosition].getAlbumId())
 
         holder.albumCover.setImageURI(uri)
 
@@ -48,7 +46,7 @@ class AlbumListAdapter(private var mContext: Context) : RecyclerView.Adapter<Alb
 
         holder.albumListItem.setOnClickListener {
             val intent = Intent(mContext, AlbumDetailActivity::class.java).apply {
-                putExtra("albumId", mData[position].getAlbumKey())
+                putExtra("album_id", mData[holder.adapterPosition].getAlbumId())
             }
             mContext.startActivity(intent)
         }
@@ -58,9 +56,7 @@ class AlbumListAdapter(private var mContext: Context) : RecyclerView.Adapter<Alb
         return mData.size
     }
 
-
     class AlbumViewHolder : RecyclerView.ViewHolder {
-
         var albumListItem: LinearLayout
         var albumCover: ImageView
         var albumName: TextView

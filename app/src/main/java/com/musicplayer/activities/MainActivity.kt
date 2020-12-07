@@ -81,7 +81,6 @@ class MainActivity : AppCompatActivity() {
     // Service connection
     private val musicConnection: ServiceConnection = object : ServiceConnection {
         override fun onServiceConnected(name: ComponentName, service: IBinder) {
-
             val binder = service as MusicService.MusicBinder
             musicSrv = binder.getService()
             musicBound = true
@@ -91,18 +90,6 @@ class MainActivity : AppCompatActivity() {
         override fun onServiceDisconnected(name: ComponentName) {
             musicBound = false
         }
-    }
-
-    private fun createNotificationChannel() {
-        val name = "Media Player Controls"
-        val descriptionText = "Media Player Controls"
-        val importance = NotificationManager.IMPORTANCE_DEFAULT
-        val channel = NotificationChannel("1", name, importance).apply {
-            description = descriptionText
-        }
-        // Register the channel with the system
-        val notificationManager: NotificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        notificationManager.createNotificationChannel(channel)
     }
 
     // Bind musicService on start
@@ -207,5 +194,17 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
+    }
+
+    private fun createNotificationChannel() {
+        val name = "Media Player Controls"
+        val descriptionText = "Media Player Controls"
+        val importance = NotificationManager.IMPORTANCE_DEFAULT
+        val channel = NotificationChannel("1", name, importance).apply {
+            description = descriptionText
+        }
+        // Register the channel with the system
+        val notificationManager: NotificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        notificationManager.createNotificationChannel(channel)
     }
 }

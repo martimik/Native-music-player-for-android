@@ -24,7 +24,6 @@ import com.musicplayer.services.MusicService
 
 
 class AlbumDetailActivity : AppCompatActivity() {
-
     private lateinit var musicSrv: MusicService
     private lateinit var playIntent: Intent
     private var musicBound = false

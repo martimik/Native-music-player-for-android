@@ -24,7 +24,6 @@ import java.util.*
 
 
 class MusicService : Service(), OnPreparedListener, MediaPlayer.OnErrorListener, OnCompletionListener {
-
     private val musicBind = MusicBinder()
     private val gson: Gson = Gson()
 
@@ -36,13 +35,21 @@ class MusicService : Service(), OnPreparedListener, MediaPlayer.OnErrorListener,
     private var playOrder = mutableListOf<Int>()
     private var songPos: Int = 0
     private var timePos: Int = 0
-    private var shuffleOn: Boolean = false
+    private var shuffleEnabled: Boolean = false
     private var startPlayback: Boolean = false
 
     inner class MusicBinder : Binder() {
         fun getService(): MusicService {
             return this@MusicService
         }
+    }
+
+    override fun onBind(intent: Intent?): IBinder? {
+        return musicBind
+    }
+
+    override fun onUnbind(intent: Intent?): Boolean {
+        return false
     }
 
     override fun onCreate() {
@@ -60,7 +67,7 @@ class MusicService : Service(), OnPreparedListener, MediaPlayer.OnErrorListener,
 
         songPos = sharedPreferences.getInt("songPos", 0)
         timePos = sharedPreferences.getInt("timePos", 0)
-        shuffleOn = sharedPreferences.getBoolean("isShuffled", false)
+        shuffleEnabled = sharedPreferences.getBoolean("isShuffled", false)
 
         setOrder()
         initMusicPlayer()
@@ -76,14 +83,14 @@ class MusicService : Service(), OnPreparedListener, MediaPlayer.OnErrorListener,
         player.setOnErrorListener(this)
 
         if (playList.size != 0) {
-            val song = playList[playOrder[songPos]]
+            val audioModel = playList[playOrder[songPos]]
 
-            val trackUri = ContentUris.withAppendedId(
-                android.provider.MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, song.getAudioId()
+            val mediaUri = ContentUris.withAppendedId(
+                android.provider.MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, audioModel.getAudioId()
             )
             // Set media player data source
             try {
-                player.setDataSource(applicationContext, trackUri)
+                player.setDataSource(applicationContext, mediaUri)
                 player.prepare()
                 player.seekTo(timePos)
 
@@ -128,14 +135,6 @@ class MusicService : Service(), OnPreparedListener, MediaPlayer.OnErrorListener,
         Log.i("Player: ", "Start")
         return START_NOT_STICKY
 
-    }
-
-    override fun onBind(intent: Intent?): IBinder? {
-        return musicBind
-    }
-
-    override fun onUnbind(intent: Intent?): Boolean {
-        return false
     }
 
     override fun onDestroy() {
@@ -213,8 +212,8 @@ class MusicService : Service(), OnPreparedListener, MediaPlayer.OnErrorListener,
         return player.isLooping
     }
 
-    fun isShuffleOn(): Boolean {
-        return shuffleOn
+    fun isShuffleEnabled(): Boolean {
+        return shuffleEnabled
     }
 
     fun setSong(newSong: Int) {
@@ -291,20 +290,19 @@ class MusicService : Service(), OnPreparedListener, MediaPlayer.OnErrorListener,
     }
 
     fun toggleShuffle() {
-        shuffleOn = !shuffleOn
+        shuffleEnabled = !shuffleEnabled
 
-        if (!shuffleOn) songPos = playOrder[songPos]
+        if (!shuffleEnabled) songPos = playOrder[songPos]
         setOrder()
 
         editor = sharedPreferences.edit()
-        editor.putBoolean("isShuffled", shuffleOn)
+        editor.putBoolean("isShuffled", shuffleEnabled)
         editor.apply()
-
     }
 
     private fun setOrder() {
         val size = playList.size - 1
-        playOrder = if (shuffleOn) {
+        playOrder = if (shuffleEnabled) {
             val temp = (0..size).toMutableList()
             temp.removeAt(songPos)
             temp.shuffle()

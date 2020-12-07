@@ -19,7 +19,6 @@ import com.musicplayer.data.DataManager
 import java.util.concurrent.TimeUnit
 
 class SongListAdapter(var mContext: Context) : RecyclerView.Adapter<SongListAdapter.SongViewHolder>() {
-
     var mData: List<AudioModel> = DataManager().getAudio(mContext)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SongViewHolder {
@@ -28,7 +27,6 @@ class SongListAdapter(var mContext: Context) : RecyclerView.Adapter<SongListAdap
     }
 
     override fun onBindViewHolder(holder: SongViewHolder, position: Int) {
-
         val duration = mData[position].getDuration()
 
         val artistNameAndDuration = String.format(

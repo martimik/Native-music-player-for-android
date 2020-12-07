@@ -5,7 +5,6 @@ import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -101,7 +100,7 @@ class PlayerFragment : Fragment {
         view.findViewById<ImageButton>(R.id.activity_player_btn_shuffle).setOnClickListener {
             val btn = view.findViewById<ImageButton>(R.id.activity_player_btn_shuffle)
 
-            if (musicSrv!!.isShuffleOn()) {
+            if (musicSrv!!.isShuffleEnabled()) {
                 btn.setColorFilter(ContextCompat.getColor(mContext, R.color.white))
             }
             else {
@@ -210,7 +209,7 @@ class PlayerFragment : Fragment {
         else {
             v.findViewById<ImageButton>(R.id.activity_player_btn_play).setImageResource(R.drawable.ic_play_circle_filled)
         }
-        if (musicSrv!!.isShuffleOn()) {
+        if (musicSrv!!.isShuffleEnabled()) {
             DrawableCompat.setTint(
                 DrawableCompat.wrap(v.findViewById<ImageButton>(R.id.activity_player_btn_shuffle).background), ContextCompat.getColor(mContext, R.color.green)
             )

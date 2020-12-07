@@ -6,7 +6,6 @@ import android.provider.MediaStore
 import android.util.Log
 
 class DataManager {
-
     fun getAudio(context: Context): List<AudioModel> {
         val query = context.contentResolver.query(
             MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, projection, MediaStore.Audio.Media.IS_MUSIC + "!= 0", null, null
@@ -80,7 +79,7 @@ class DataManager {
     }
 
     private fun audioQuery(cursor: Cursor?): List<AudioModel> {
-        var audioList: MutableList<AudioModel> = mutableListOf();
+        val audioList: MutableList<AudioModel> = mutableListOf();
         // Query files from external memory
         if (cursor != null) {
             while (cursor.moveToNext()) {
@@ -117,23 +116,23 @@ class DataManager {
         MediaStore.Audio.AudioColumns.TRACK
     )
 
-private fun artistQuery(cursor: Cursor?): List<ArtistModel> {
-    var artistList: MutableList<ArtistModel> = mutableListOf();
-    // Query files from external memory
-    if(cursor != null) {
-        while (cursor.moveToNext()) {
-            val artistId = cursor.getLong(0)
-            val artistName = cursor.getString(1)
-            val albumId = cursor.getLong(2)
+    private fun artistQuery(cursor: Cursor?): List<ArtistModel> {
+        var artistList: MutableList<ArtistModel> = mutableListOf();
+        // Query files from external memory
+        if(cursor != null) {
+            while (cursor.moveToNext()) {
+                val artistId = cursor.getLong(0)
+                val artistName = cursor.getString(1)
+                val albumId = cursor.getLong(2)
 
-            val artistModel = ArtistModel(artistId, artistName, albumId)
-            artistList.add(artistModel)
+                val artistModel = ArtistModel(artistId, artistName, albumId)
+                artistList.add(artistModel)
+            }
+            cursor.close()
         }
-        cursor.close()
-    }
 
-    return artistList
-}
+        return artistList
+    }
 
     private val artistProjection = arrayOf(
         MediaStore.Audio.AudioColumns.ARTIST_ID,

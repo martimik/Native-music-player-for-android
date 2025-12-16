@@ -4,16 +4,6 @@
 
 V. 1.0
 
-<img src="./images/main_albums.jpg" alt="drawing" height="500"/>
-<img src="./images/main_artists.jpg" alt="drawing" height="500"/>
-<img src="./images/main_songs.jpg" alt="drawing" height="500"/>
-<img src="./images/artist_detail.jpg" alt="drawing" height="500"/>
-<img src="./images/artist_detail_2.jpg" alt="drawing" height="500"/>
-<img src="./images/album_detail.jpg" alt="drawing" height="500"/>
-<img src="./images/album_detail_2.jpg" alt="drawing" height="500"/>
-<img src="./images/player_main.jpg" alt="drawing" height="500"/>
-<img src="./images/playlist.jpg" alt="drawing" height="500"/>
-
 ### Implemented features
 
 - Fetching local media files from phone storage.
@@ -26,3 +16,13 @@ V. 1.0
 ## Developement enviroment/requirements
 
 * Android 10, api level 29
+
+<img src="./images/main_albums.jpg" alt="drawing" height="500"/>
+<img src="./images/main_artists.jpg" alt="drawing" height="500"/>
+<img src="./images/main_songs.jpg" alt="drawing" height="500"/>
+<img src="./images/artist_detail.jpg" alt="drawing" height="500"/>
+<img src="./images/artist_detail_2.jpg" alt="drawing" height="500"/>
+<img src="./images/album_detail.jpg" alt="drawing" height="500"/>
+<img src="./images/album_detail_2.jpg" alt="drawing" height="500"/>
+<img src="./images/player_main.jpg" alt="drawing" height="500"/>
+<img src="./images/playlist.jpg" alt="drawing" height="500"/>

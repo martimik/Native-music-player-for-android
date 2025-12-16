@@ -1,9 +1,5 @@
 # Generic music player - Native mediaplayer for Android 10
 
-## Status
-
-V. 1.0
-
 ### Implemented features
 
 - Fetching local media files from phone storage.
@@ -16,6 +12,10 @@ V. 1.0
 ## Developement enviroment/requirements
 
 * Android 10, api level 29
+
+## Status
+
+V. 1.0
 
 <img src="./images/main_albums.jpg" alt="drawing" height="500"/>
 <img src="./images/main_artists.jpg" alt="drawing" height="500"/>
